@@ -1,0 +1,43 @@
+<%- include('header.ejs') %>
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Order Success</h4>
+                    <div class="breadcrumb__links">
+                        <a href="/home">Home</a>
+                        <span>Order Success</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Order Success Section Begin -->
+<section class="order-success spad">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <img src="/assets/images/success.jpg" alt="Order Success" class="mb-4" width="100px">
+                <div class="order-success__content">
+                    <h2>Thank You for Your Order!</h2>
+                    <p>Your order has been successfully placed.</p>
+                    <p>Your order id is <%=order.orderId%><strong></strong>.</p>
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-dark mr-2">Continue Shopping</a>
+                        <a href="/myOrders" class="btn btn-outline-dark">View Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Order Success Section End -->
+
+
+<%- include('footer.ejs') %>

@@ -1,0 +1,422 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3">
+      <div class="header__logo">
+        <a href="/home"><img src="/assets/img/logo.png" alt="" /></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <nav class="header__menu mobile-menu">
+        <ul>
+          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/shop/men">Men</a></li>
+          <li><a href="/shop/women">Women</a></li>
+          <li><a href="/contactUs">Contact us</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="header__nav__option">
+        <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt="">
+          <%if(locals.wishlistCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; ">
+            <%=wishlistCount%>
+          </span>
+          <%}%>
+                    </a>
+                    <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+                        <%if(locals.cartCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; ">
+            <%=cartCount%>
+          </span>
+          <%}%>
+                    </a>
+      </div>
+    </div>
+  </div>
+  <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb__text">
+          <h4>My Orders</h4>
+          <div class="breadcrumb__links">
+            <a href="/home">Home</a>
+            <a href="/myOrders">My Orders</a>
+            <span>ID-<%=order.orderId %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Order Details Page Begin -->
+<div class="container mt-5 ">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <!-- Order Details -->
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+          <h5>Order Details</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6><span style="font-weight: bold;">Order ID: </span><span>
+                  <%= order.orderId %>
+                </span></h6>
+
+              <!-- Add more order details as needed -->
+            </div>
+            <div class="col-md-6">
+              <!-- Add shipping details -->
+              <h6>Shipping Address:</h6>
+              <p>
+                Name:<span class="font-weight-bold">
+                  <%= order.address.name %>
+                </span> <br>
+                Mobile:<span class="font-weight-bold">
+                  <%= order.address.mobile %>
+                </span> <br>
+                House no.:<span class="font-weight-bold">
+                  <%= order.address.house %>
+                </span> <br>
+                Locality:<span class="font-weight-bold">
+                  <%= order.address.locality %>
+                </span> <br>
+                City:<span class="font-weight-bold">
+                  <%= order.address.city %>
+                </span> <br>
+                State:<span class="font-weight-bold">
+                  <%= order.address.state %>
+                </span>
+                Pin:<span class="font-weight-bold">
+                  <%= order.address.pincode %>
+                </span>
+
+
+
+              </p>
+              <h6>Payment Method</h6>
+              <p>
+                <%if(order.paymentMethod==="cod"){ %>Cash on Delivery
+                <%} else if(order.paymentMethod==="razorpay"){%>
+                Razorpay
+                <%} else {%>
+                Wallet
+                <%}%>
+                                </p>
+                            </div>
+                            <%if(item.itemStatus==="Ordered"||item.itemStatus==="Shipped"||item.itemStatus==="Delivered"){%>
+                            <button class="btn btn-success ml-3" onclick="downloadInvoice('<%=item._id%>')">Download Invoice</button>
+                            <%}%>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="card mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5>Order Item Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <img src="/Product Images/<%= item.image %>" alt="<%= item.name %>"
+                class="img-thumbnail">
+            </div>
+            <div class="col-md-6">
+              <h5>
+                <%= item.productName %>
+              </h5>
+              Status:
+              <span class="badge 
+                                <% if (item.itemStatus === " Ordered") { %> bg-info text-white
+                                    <% } else if (item.itemStatus==="Delivered" ) { %> bg-success text-white
+                                        <% } else if (item.itemStatus==="Cancelled" ) { %> bg-danger text-white
+                                            <% } else { %> bg-warning text-dark <% } %>">
+                <%= item.itemStatus %>
+              </span>
+              <%if(item.reason){%>
+              <small> Reason : <%=item.reason%> </small>
+              <%}%>
+                                        </p>
+                                        Category: <%= item.categoryName %> <br>
+              Price: Rs
+              <%= item.price %> <br>
+              Quantity: <%= item.quantity %> <br>
+              Discount: Rs <%= item.quantity * item.price - item.quantity * item.finalPrice %> <br>
+              Total: Rs <%= item.quantity * item.finalPrice %>
+            </div>
+            <div class="col-md-3">
+              <% if (item.itemStatus !="Delivered" && item.itemStatus !="Cancelled" && item.itemStatus !="Return Pending" && item.itemStatus !="Returned" &&order.status !="Pending") { %>
+              <button class="btn btn-danger btn-block" onclick="cancelOrder('<%= order._id %>', '<%= item.productId %>')">Cancel</button>
+              <% } else if (item.itemStatus==="Delivered" ) { %>
+              <button class="btn btn-warning btn-block" data-toggle="modal" data-target="#returnReasonModal">Return</button>
+
+              <% } %>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Order Details Page End -->
+<table class="table" style="display: none;">
+  <thead>
+    <tr>
+      <th>Product Name</th>
+      <th>Price (Rs)</th>
+      <th>Quantity</th>
+      <th>Discount (Rs)</th>
+      <th>Total (Rs)</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for(let item of orders){%>
+    <tr>
+      <td><%= item.productName %></td>
+      <td><%= item.price %></td>
+      <td><%= item.quantity %></td>
+      <td><%= item.quantity * item.price - item.quantity * item.finalPrice%></td>
+      <td><%= item.quantity * item.finalPrice %></td>
+    </tr>
+      <%}%>
+      <tr>
+        <td>Delivery Charge</td>
+        <td>50</td>
+        <td>-</td>
+        <td>-</td>
+        <td>50</td>
+      </tr>
+  </tbody>
+</table>
+
+
+<!-- Return Reason Modal -->
+<div class="modal fade" id="returnReasonModal" tabindex="-1" aria-labelledby="returnReasonModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="returnReasonModalLabel">Select Return Reason</h5>
+      </div>
+      <div class="modal-body">
+        <form id="returnReasonForm">
+          <div class="mb-3">
+            <label for="returnReasonSelect" class="form-label">Reason for Return:</label>
+            <br>
+            <select class="form-select" id="returnReasonSelect" required>
+              <option value="" disabled selected>Select a reason</option>
+              <option value="Wrong Item">Wrong Item</option>
+              <option value="Changed my mind">Changed my mind</option>
+              <option value="Defective Product">Defective Product</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-warning" id="confirmReturn" onclick="returnItem('<%=order._id%>','<%=item._id%>')">Confirm Return</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<%- include('footer.ejs') %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.2/purify.min.js"></script>
+
+<script>
+  const cancelOrder = (orderId, productId) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: '',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.get(`/cancelOrder?orderId=${orderId}&pId=${productId}`)
+          .then((response) => {
+            if (response.data.success) {
+              Swal.fire(
+                'Cancelled!',
+                'Your order has been cancelled',
+                'success'
+              ).then(() => {
+                window.location.reload();
+              });
+            } else {
+              Swal.fire(
+                'Error!',
+                'Failed to cancel the order.',
+                'error'
+              );
+            }
+          })
+          .catch((error) => {
+            console.error('Error cancelling the order:', error);
+            Swal.fire(
+              'Error!',
+              'An error occurred while cancelling the order.',
+              'error'
+            );
+          });
+      }
+    });
+  }
+
+  const returnItem = (orderId, itemId) => {
+
+    if (document.getElementById("returnReasonSelect").value) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: '',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const reason = document.getElementById("returnReasonSelect").value;
+          axios.get(`/returnItem?orderId=${orderId}&itemId=${itemId}&reason=${reason}`)
+            .then((response) => {
+              if (response.data.success) {
+                window.location.reload();
+              } else {
+                Swal.fire(
+                  'Error!',
+                  'Failed to place returning the item.',
+                  'error'
+                );
+              }
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              Swal.fire(
+                'Error!',
+                'An error occurred',
+                'error'
+              );
+            });
+        }
+      });
+
+    } else {
+      Swal.fire(
+        'Warning!',
+        'Please Select a valid reason.',
+        'warning'
+      );
+    }
+  }
+ 
+
+  function downloadInvoice() {
+  const doc = new window.jspdf.jsPDF();
+  const pageCenter = doc.internal.pageSize.getWidth() / 2;
+
+  doc.setFontSize(25);
+  doc.setTextColor(228, 0, 124);
+  doc.text("S C E N T O F I A", pageCenter, 20, { align: 'center' });
+  doc.setFontSize(15);
+  doc.setTextColor(40, 40, 40);
+  doc.text("Invoice", pageCenter, 30, { align: 'center' });
+
+  const orderId = "<%= order.orderId %>";
+  const orderDate = "<%= order.date.toLocaleDateString() %>";
+  const invoiceDate = new Date().toLocaleDateString();
+  const name = "<%= order.address.name %>";
+  const mobile = "<%= order.address.mobile %>";
+  const house = "<%= order.address.house %>";
+  const locality = "<%= order.address.locality %>";
+  const city = "<%= order.address.city %>";
+  const state = "<%= order.address.state %>";
+  const pin = "<%= order.address.pincode %>";
+  const paymentMethod = `<% if(order.paymentMethod === "cod") { %>Cash on Delivery<% } else if(order.paymentMethod === "razorpay") { %>Razorpay<% } else { %>Wallet<% } %>`;
+  const orderStatus = "<%= item.itemStatus %>";
+
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.text(`Order ID: ${orderId}`, 20, 40);
+  doc.text(`Ordered Date: ${orderDate}`, 20, 45);
+  doc.text(`Invoice Date: ${invoiceDate}`, 20, 50);
+
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  const shipFromX = pageCenter;
+  doc.text("Ship-From Address:", shipFromX, 60);
+  doc.setFontSize(10);
+  doc.text("Scentofia,\nVidyaranyapura,\nBangalore,\nKarnataka,\n503640", shipFromX, 65);
+
+  const shippingAddressStartX = 20;
+  doc.setFontSize(12);
+  doc.text(`Shipping Address:`, shippingAddressStartX, 60);
+  doc.setFontSize(10);
+  doc.text(`Name: ${name}`, shippingAddressStartX, 65);
+  doc.text(`Mobile: ${mobile}`, shippingAddressStartX, 70);
+  doc.text(`House no.: ${house}`, shippingAddressStartX, 75);
+  doc.text(`Locality: ${locality}`, shippingAddressStartX, 80);
+  doc.text(`City: ${city}`, shippingAddressStartX, 85);
+  doc.text(`State: ${state}`, shippingAddressStartX, 90);
+  doc.text(`Pin: ${pin}`, shippingAddressStartX, 95);
+  doc.text(`Payment Method: ${paymentMethod}`, shippingAddressStartX, 105);
+  doc.text(`Order Status: ${orderStatus}`, shippingAddressStartX, 110);
+
+  const table = document.querySelector(".table");
+  const tableData = Array.from(table.querySelectorAll('tbody tr')).map(row => {
+    return Array.from(row.querySelectorAll('td')).map(cell => cell.innerText.trim());
+  });
+
+  doc.autoTable({
+    head: [['Product Name', 'Price (Rs)', 'Quantity', 'Discount (Rs)', 'Total (Rs)']],
+    body: tableData,
+    startY: 120,
+    theme: 'striped',
+    headStyles: { fillColor: [40, 40, 40] },
+    styles: { halign: 'left' },
+  });
+
+  let total = 0;
+  tableData.forEach(row => {
+    const totalPrice = parseFloat(row[4]); 
+    if (!isNaN(totalPrice)) {
+      total += totalPrice;
+    }
+  });
+  const grandTotal = total;
+
+  const finalY = doc.lastAutoTable.finalY + 10;
+  doc.setFontSize(14);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Grand Total: Rs ${grandTotal}`, doc.internal.pageSize.getWidth() - 20, finalY + 10, { align: 'right' });
+
+  doc.save("order_invoice.pdf");
+}
+
+
+
+</script>

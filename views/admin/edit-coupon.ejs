@@ -1,0 +1,237 @@
+<%- include('header.ejs') %>
+
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item nav-profile">
+                    <a href="#" class="nav-link">
+                        <div class="nav-profile-image">
+                            <img src="/admin-assets/images/faces/face1.jpg" alt="profile">
+                            <span class="login-status online"></span>
+                            <!--change to offline or busy as needed-->
+                        </div>
+                        <div class="nav-profile-text d-flex flex-column">
+                            <span class="font-weight-bold mb-2">Admin</span>
+
+                        </div>
+                        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard">
+                        <span class="menu-title">Dashboard</span>
+                        <i class="mdi mdi-home menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/category">
+                        <span class="menu-title">Category</span>
+                        <i class="mdi mdi-package-variant menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/products">
+                        <span class="menu-title">Products</span>
+                        <i class="mdi mdi-cart menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">
+                        <span class="menu-title">Users</span>
+                        <i class="mdi mdi-account menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/orders">
+                        <span class="menu-title">Orders</span>
+                        <i class="mdi mdi-shopping menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#general-pages" aria-expanded="false"
+                        aria-controls="general-pages">
+                        <span class="menu-title">Offers</span>
+                        <i class="menu-arrow"></i>
+                        <i class="mdi mdi-sale menu-icon"></i>
+                    </a>
+                    <div class="collapse" id="general-pages">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link" href="/admin/productOffer"> Product Offers </a>
+                            </li>
+                            <li class="nav-item"> <a class="nav-link" href="/admin/categoryOffer"> Category
+                                    Offers </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="nav-item bg-dark">
+                    <a class="nav-link" href="/admin/coupons">
+                        <span class="menu-title text-light">Coupon</span>
+                        <i class="mdi mdi-tag menu-icon text-light"></i>
+                    </a>
+                </li>
+
+                  <li class="nav-item">
+          <a class="nav-link" href="/admin/salesReport">
+            <span class="menu-title">Sales Report</span>
+            <i class="mdi mdi-chart-line menu-icon"></i>
+          </a>
+        </li>
+
+
+            </ul>
+        </nav>
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title">
+                        <span class="page-title-icon bg-gradient-dark text-white mr-2">
+                            <i class="mdi mdi-tag"></i>
+                        </span> Coupon
+                    </h3>
+                    <nav aria-label="breadcrumb">
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <button class="btn btn-dark" data-toggle="modal" data-target="#couponOfferModal">Create
+                                    a Coupon</button>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Edit Coupon</h4>
+                            <br><br>
+
+                            <form class="forms-sample" onsubmit="return validateCoupon()" method="post">
+
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Coupon Code</label>
+                                    <input type="text" class="form-control" id="couponCode" name="couponCode"
+                                        value="<%=coupon.couponCode%>">
+                                    <small class="text-danger" id="couponCodeError" style="display: none;">Enter a valid
+                                        coupon code(4 digits)</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="couponOfferPercentage">Offer Percentage</label>
+                                    <input type="number" class="form-control" id="couponOfferPercentage"
+                                        name="offerPercentage" value="<%=coupon.offerPercentage%>">
+                                    <small class="text-danger" id="couponOfferError" style="display: none;">Offer
+                                        percentage must
+                                        be between 0 -
+                                        50</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="couponMinPrice">Minimun Price</label>
+                                    <input type="number" class="form-control" id="minPrice" name="minPrice"
+                                        value="<%=coupon.minPrice%>">
+                                    <small class="text-danger" id="minPriceError" style="display: none;">Minimum price
+                                        should be between 50 and
+                                        5000</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="couponMaxRedeemable">Max Redeemable</label>
+                                    <input type="number" class="form-control" id="maxRedeemable" name="maxRedeemable"
+                                        value="<%=coupon.maxRedeemable%>">
+                                    <small class="text-danger" id="maxRedeemableError" style="display: none;">Enter a
+                                        valid Maximum Redeemable
+                                        Amount</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="couponExpiryDate">Expiry Date</label>
+                                    <input type="date" class="form-control" id="couponExpiryDate" name="expiryDate">
+                                    <small class="text-danger" id="couponExpiryDateError" style="display: none;">Select
+                                        a valid
+                                        date</small>
+                                </div>
+
+
+                                <button class="btn btn-gradient-dark mr-2" type="submit">Submit</button>
+                                <a href="/admin/coupons" class="btn btn-light">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <%- include('footer.ejs') %>
+
+                <script>
+                    const validityDate = new Date('<%= coupon.expiryDate.toISOString() %>');
+                    const formattedValidity = validityDate.toISOString().split('T')[0]; 
+                    document.getElementById('couponExpiryDate').value = formattedValidity;
+
+                    const validateCoupon = () => {
+                        let today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const coupon = document.getElementById("couponCode").value.trim();
+                        const offer = document.getElementById("couponOfferPercentage").value.trim();
+                        const maxRedeemable = document.getElementById("maxRedeemable").value.trim();
+                        const minPrice = document.getElementById("minPrice").value.trim();
+                        const expireDateValue = document.getElementById("couponExpiryDate").value;
+
+                        let expireDate;
+                        if (expireDateValue) {
+                            expireDate = new Date(expireDateValue);
+                        }
+
+                        let numberRegex = /^\d+$/;
+                        let isValid = true;
+
+                        if (!numberRegex.test(coupon) || coupon <= 999 || coupon >= 10000) {
+                            document.getElementById("couponCodeError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("couponCodeError").style.display = "none"
+                        }
+
+                        if (!numberRegex.test(offer) || offer <= 0 || offer >= 51) {
+                            document.getElementById("couponOfferError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("couponOfferError").style.display = "none"
+                        }
+
+                        if (!numberRegex.test(minPrice) || minPrice <= 51 || minPrice >= 5001) {
+                            document.getElementById("minPriceError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("minPriceError").style.display = "none"
+                        }
+
+                        if (!numberRegex.test(maxRedeemable) || maxRedeemable <= 10 || maxRedeemable >= 10000) {
+                            document.getElementById("maxRedeemableError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("maxRedeemableError").style.display = "none"
+                        }
+
+                        if (!expireDate || expireDate < today) {
+                            document.getElementById("couponExpiryDateError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("couponExpiryDateError").style.display = "none";
+                        }
+
+                        return isValid;
+                    }
+
+
+
+                </script>

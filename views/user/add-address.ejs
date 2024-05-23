@@ -1,0 +1,183 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3">
+      <div class="header__logo">
+        <a href="/home"><img src="/assets/img/logo.png" alt="Logo" /></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <nav class="header__menu mobile-menu">
+        <ul>
+          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/shop/men">Men</a></li>
+          <li><a href="/shop/women">Women</a></li>
+          <li><a href="/contactUs">Contact us</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="header__nav__option">
+      <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt=""><span class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; "><%=wishlistCount%></span>
+         </a>
+        <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+          <span class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; "><%=cartCount%></span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+<!-- Add New Address Form -->
+<div class="row justify-content-center mt-4" style="max-width: 100vw;">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Add New Address</h2>
+
+        <!-- Address Form -->
+        <form id="addressForm" onsubmit="return validateForm()" method="post">
+
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter name" name="name">
+            <div class="error-message text-danger" id="nameError" style="display: none;">Please provide
+              a valid name.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Type of Address</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="addressType" id="home" value="Home" checked>
+              <label class="form-check-label" for="home">Home</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="addressType" id="work" value="Work">
+              <label class="form-check-label" for="work">Work</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="addressType" id="other" value="Other">
+              <label class="form-check-label" for="other">Other</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address1">House Name/No.</label>
+            <input type="text" class="form-control" id="house" placeholder="Enter address line 1" name="house">
+            <div class="error-message text-danger" id="houseError" style="display: none;">Please provide
+              a house name or number.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="city">Locality</label>
+            <input type="text" class="form-control" id="locality" placeholder="Enter locality" name="locality">
+            <div class="error-message text-danger" id="localityError" style="display: none;">Please
+              provide a valid locality.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" placeholder="Enter city" name="city">
+            <div class="error-message text-danger" id="cityError" style="display: none;">Please provide
+              a valid city.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="state">State</label>
+            <input type="text" class="form-control" id="state" placeholder="Enter state" name="state">
+            <div class="error-message text-danger" id="stateError" style="display: none;">Please provide
+              a valid state.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="pincode">Pincode</label>
+            <input type="text" class="form-control" id="pincode" placeholder="Enter pincode" name="pincode">
+            <div class="error-message text-danger" id="pincodeError" style="display: none;">Please
+              provide a valid 6-digit pincode.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="mobile">Mobile</label>
+            <input type="text" class="form-control" id="mobile" placeholder="Enter mobile number" name="mobile">
+            <div class="error-message text-danger" id="mobileError" style="display: none;">Please
+              provide a valid mobile number.</div>
+          </div>
+
+          <button type="submit" class="btn btn-dark btn-block mb-2">Save Address</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer.ejs') %>
+
+<script>
+  function validateForm() {
+    const name = document.getElementById('name').value.trim();
+    const house = document.getElementById('house').value.trim();
+    const locality = document.getElementById('locality').value.trim();
+    const city = document.getElementById('city').value.trim();
+    const state = document.getElementById('state').value.trim();
+    const pincode = document.getElementById('pincode').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+
+    let isValid = true;
+
+    if (!name.match(/^[a-zA-Z\s]+$/)) {
+      document.getElementById('nameError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('nameError').style.display = 'none';
+    }
+
+    if (!house.match(/^[a-zA-Z\s]+|\d$/)) {
+      document.getElementById('houseError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('houseError').style.display = 'none';
+    }
+
+    if (!locality.match(/^[a-zA-Z\s]+$/)) {
+      document.getElementById('localityError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('localityError').style.display = 'none';
+    }
+
+    if (!mobile.match(/^[6-9]\d{9}$/)) {
+      document.getElementById('mobileError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('mobileError').style.display = 'none';
+    }
+
+    if (!pincode.match(/^[1-9]\d{5}$/)) {
+      document.getElementById('pincodeError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('pincodeError').style.display = 'none';
+    }
+
+    if (!city.match(/^[a-zA-Z\s]+$/)) {
+      document.getElementById('cityError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('cityError').style.display = 'none';
+    }
+
+    if (!state.match(/^[a-zA-Z\s]+$/)) {
+      document.getElementById('stateError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('stateError').style.display = 'none';
+    }
+
+    return isValid;
+  }
+</script>

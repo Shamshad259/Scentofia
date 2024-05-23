@@ -1,0 +1,320 @@
+<%- include('header.ejs') %>
+
+  <div class="container">
+    <div class="row">
+      <!-- Header Section -->
+      <div class="col-lg-3 col-md-3">
+        <!-- Header Logo -->
+        <div class="header__logo">
+          <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <!-- Navigation -->
+        <nav class="header__menu mobile-menu">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/shop">Shop</a></li>
+            <li><a href="/shop/men">Men</a></li>
+            <li><a href="/shop/women">Women</a></li>
+            <li><a href="/contactUs">Contact us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col-lg-3 col-md-3">
+        <!-- Header Navigation Options -->
+        <div class="header__nav__option">
+          <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt="">
+          <%if(locals.user){%><span class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; "><%=wishlistCount%></span><%}%></a>
+          <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+          <%if(locals.user){%><span class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; "><%=cartCount%></span><%}%>
+         </a>
+        </div>
+      </div>
+    </div>
+    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+  </div>
+  </header>
+  <!-- Header Section End -->
+
+  <!-- Product Section Begin -->
+  <section class="product spad">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3">
+          <!-- Shop Sidebar -->
+          <div class="shop__sidebar">
+            <!-- Shop Sidebar Search -->
+            <div class="input-group mb-3 shop__sidebar__search">
+              <input type="text" class="form-control" placeholder="Search..." id="searchInput" <%if(search.length>0){%>
+              value="<%=search%>" <%}%>>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" onclick="search()">
+                      <span class="icon_search"></span>
+                    </button>
+                  </div>
+            </div>
+
+            <!-- Shop Sidebar Accordion -->
+            <div class="shop__sidebar__accordion">
+              <div class="accordion" id="accordionExample">
+                <!-- Categories -->
+                <div class="card">
+                  <div class="card-heading">
+                    <h4 class="mb-3 font-weight-bold">FILTER</h4>
+                  </div>
+                  <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                    <div class="card-body">
+                      <h5 class="mb-3 font-weight-bold">Categories</h5>
+                      <div class="shop__sidebar__categories">
+                        <ul class="nice-scroll">
+                          <li>
+                            <input type="checkbox" id="menCheckbox" name="category" value="662374155f874797f128837b"
+                              <%=selectedCategories.includes('662374155f874797f128837b') ? 'checked' : '' %>>
+                            <label for="menCheckbox">Men</label>
+                          </li>
+                          <li>
+                            <input type="checkbox" id="womenCheckbox" name="category" value="6623741a5f874797f128837f"
+                              <%=selectedCategories.includes('6623741a5f874797f128837f') ? 'checked' : '' %>>
+                            <label for="womenCheckbox">Women</label>
+                          </li>
+                        </ul>
+                      </div>
+                      <h5 class="mb-3 font-weight-bold">Price Range</h5>
+                      <div class="form-group">
+                        <input type="number" class="form-control" id="minPrice" placeholder="Min Price"
+                          <%if(minPrice>0){%> value="<%=minPrice%>" <%}%>>
+                      </div>
+                      <div class="form-group">
+                        <input type="number" class="form-control" id="maxPrice" placeholder="Max Price"
+                          <%if(maxPrice>0){%> value="<%=maxPrice%>" <%}%>>
+                      </div>
+                      <button type="button" class="btn btn-dark mt-3" onclick="filter()">Filter</button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Price range if needed -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <!-- Shop Product Options -->
+          <div class="shop__product__option">
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6">
+
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="shop__product__option__right">
+                  <p>Sort by:</p>
+                  <select id="sortOptions" onchange="sort()">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="newArrival" <%=sortOption==='newArrival' ? 'selected' : '' %>>New
+                      Arrivals</option>
+                    <option value="priceLowToHigh" <%=sortOption==='priceLowToHigh' ? 'selected' : '' %>>Price: Low To
+                      High</option>
+                    <option value="priceHighToLow" <%=sortOption==='priceHighToLow' ? 'selected' : '' %>>Price: High To
+                      Low</option>
+                    <option value="nameAZ" <%=sortOption==='nameAZ' ? 'selected' : '' %>>Name: A-Z
+                    </option>
+                    <option value="nameZA" <%=sortOption==='nameZA' ? 'selected' : '' %>>Name: Z-A
+                    </option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row product__filter d-flex justify-content-center mt-5 ">
+            <!-- Product Loop -->
+            <% for (const product of products) { %>
+              <div class="col-lg-3 col-md-6 col-sm-6 mix new-arrivals m-4"
+                style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                <div class="product__item">
+                  <div class="product__item__pic">
+                    <a href="/productPage?id=<%=product._id%>"><img src="/Product Images/<%=product.images[0]%>"
+                        alt="<%=product.name%>" class="set-bg"></a>
+                    <span class="label">New</span>
+                    <ul class="product__hover">
+                      <% if (!locals.user) { %>
+                        <li><a class="btn" href="/login"><i class="mdi mdi-heart-outline"></i></a></li>
+                        <% } else if (!wishlist || !wishlist.some(item=> String(item.productId) ===
+                          String(product._id))) { %>
+                          <li><a class="btn" onclick="addToWishlist('<%= product._id %>')"><i
+                                class="mdi mdi-heart-outline text-danger"></i></a></li>
+                          <% } else { %>
+                            <li><a class="btn" onclick="removeFromWishlist('<%= product._id %>')"><i
+                                  class="mdi mdi-heart text-danger"></i></a></li>
+                            <% } %>
+                    </ul>
+                  </div>
+                  <div class="product__item__text">
+                    <h6>
+                      <%=product.name%>
+                    </h6>
+                    <a href="/productPage?id=<%=product._id%>" class="add-cart">View</a>
+                    <div class="rating">
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star"></i>
+                      <i class="fa fa-star-o"></i>
+                      <i class="fa fa-star-o"></i>
+                      <i class="fa fa-star-o"></i>
+                    </div>
+                    <%if(product?.newPrice){%>
+                      <span style="color: red; text-decoration: line-through;">Rs <%=product.price%></span>
+                      <h5>Rs <%=product.newPrice%>
+                      </h5>
+                      <%} else {%>
+                        <h5>Rs <%=product.price%>
+                        </h5>
+                        <%}%>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+          </div>
+        </div>
+      </div>
+      <!-- Pagination -->
+      <div class="pagination-container mt-4">
+        <ul class="pagination justify-content-center">
+          <% if (currentPage> 1) { %>
+            <li class="page-item">
+              <a class="page-link page-link-custom" href="javascript:void(0)"
+                onclick="navigateToPage('<%= currentPage - 1 %>')"
+                style="background-color: #fff; border-color: #000; color: #000;">Previous</a>
+            </li>
+            <% } %>
+              <% for (let i=1; i <=totalPages; i++) { %>
+                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                  <a class="page-link page-link-custom" href="javascript:void(0)" onclick="navigateToPage('<%= i %>')"
+                    style="background-color: <%= i === currentPage ? '#343a40' : '#fff' %>; border-color: #000; color: <%= i === currentPage ? '#fff' : '#000' %>;">
+                    <%= i %>
+                  </a>
+                </li>
+                <% } %>
+                  <% if (currentPage < totalPages) { %>
+                    <li class="page-item">
+                      <a class="page-link page-link-custom" href="javascript:void(0)"
+                        onclick="navigateToPage('<%= currentPage + 1 %>')"
+                        style="background-color: #fff; border-color: #000; color: #000;">Next</a>
+                    </li>
+                    <% } %>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+  <!-- Product Section End -->
+
+  <%- include('footer.ejs') %>
+
+
+    <script>
+      let selectedOption = document.getElementById('sortOptions').value;
+      const selectedCategories = [];
+      const checkboxes = document.querySelectorAll("input[name='category']");
+      let minPrice = document.getElementById("minPrice").value;
+      let maxPrice = document.getElementById("maxPrice").value;
+
+      window.onload = () => {
+        checkboxes.forEach(function (checkbox) {
+          if (checkbox.checked) {
+            selectedCategories.push(checkbox.value);
+          }
+        });
+      }
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) {
+            selectedCategories.push(checkbox.value);
+          } else {
+            const index = selectedCategories.indexOf(checkbox.value);
+            if (index > -1) {
+              selectedCategories.splice(index, 1);
+            }
+          }
+        });
+      });
+
+
+
+
+      const filter = () => {
+
+        minPrice = document.getElementById("minPrice").value;
+        maxPrice = document.getElementById("maxPrice").value;
+        window.location.href = `/sortFilterSearch?sortOption=${selectedOption}&selectedCategories=${selectedCategories}&searchQuery=${searchInput}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+      }
+
+
+
+
+      const sort = () => {
+
+        selectedOption = document.getElementById('sortOptions').value;
+        window.location.href = `/sortFilterSearch?sortOption=${selectedOption}&selectedCategories=${selectedCategories}&searchQuery=${searchInput}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+
+      };
+
+
+
+      let searchInput = document.getElementById("searchInput").value;
+      const search = () => {
+        searchInput = document.getElementById("searchInput").value;
+        window.location.href = `/sortFilterSearch?sortOption=${selectedOption}&selectedCategories=${selectedCategories}&searchQuery=${searchInput}&minPrice=${minPrice}&maxPrice=${maxPrice}`;
+      }
+
+
+      const navigateToPage = (page) => {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('page', page);
+        window.location.href = '?' + urlParams.toString();
+      }
+
+
+      const addToWishlist = (productId) => {
+        axios.get(`/addToWishlist?productId=${productId}`)
+          .then(response => {
+            Swal.fire(
+              "Success",
+              "Added to your Wishlist",
+              "success"
+            )
+              .then(() => {
+                window.location.reload();
+              })
+          })
+          .catch(error => {
+            Swal.fire(
+              "Error!",
+              "An error occured while adding product to the wishlist",
+              "error"
+            )
+          })
+      }
+
+      const removeFromWishlist = (productId) => {
+        axios.get(`/removeFromWishlist?productId=${productId}`)
+          .then((response) => {
+            Swal.fire(
+              "Success",
+              "Removed from your Wishlist",
+              "success"
+            )
+              .then(() => {
+                window.location.reload();
+              })
+              .catch(error => {
+                Swal.fire(
+                  "Error!",
+                  "An error occured while removing product from the wishlist",
+                  "error"
+                )
+              })
+          })
+      }
+    </script>

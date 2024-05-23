@@ -1,0 +1,105 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            <div class="header__logo">
+                <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <nav class="header__menu mobile-menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/shop/men">Men</a></li>
+                    <li><a href="/shop/women">Women</a></li>
+                    <li><a href="/contactUs">Contact us</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="header__nav__option">
+                <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt=""></a>
+                <a href="/cart"><img src="/assets/img/icon/cart.png" alt=""></a>
+            </div>
+        </div>
+    </div>
+    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+<section class="login-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="login-form shadow-lg p-4 rounded">
+                    <h2 class="text-center mb-4">Login</h2>
+
+                    <% if(locals.message) { %>
+                        <div class="alert alert-danger text-center" id="invalid">
+                            <%= message %>
+                        </div>
+                    <% } %>
+
+                    <div class="btn-group btn-block" role="group" aria-label="Login buttons">
+                        <!-- Gmail Login -->
+                        <a href="/auth/google" class="btn btn-google"><i class="fab fa-google text-danger"></i> Login with Google</a>
+                    </div>
+
+                    <h6 class="text-center mt-4">OR</h6>
+
+                    <form id="loginForm" class="needs-validation mt-4" novalidate method="post">
+
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password"><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                            <div class="invalid-feedback">
+                                Please provide your password.
+                            </div>
+                            <a href="/forgotPassword">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <p class="text-center mt-3">Don't have an account? <a href="/register">Sign up</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            if (!this.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            this.classList.add('was-validated');
+
+            let email = document.getElementById('email').value;
+            let emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('email').setCustomValidity('Please provide a valid email.');
+                event.preventDefault();
+            } else {
+                document.getElementById('email').setCustomValidity('');
+            }
+        });
+    });
+</script>
+
+<%- include('footer.ejs') %>

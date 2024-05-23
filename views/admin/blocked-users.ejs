@@ -1,0 +1,206 @@
+<%- include('header.ejs') %>
+
+
+<!-- partial -->
+<div class="container-fluid page-body-wrapper">
+  <!-- partial:partials/_sidebar.html -->
+  <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item nav-profile">
+        <a href="#" class="nav-link">
+          <div class="nav-profile-image">
+            <img src="/admin-assets/images/faces/face1.jpg" alt="profile">
+            <span class="login-status online"></span>
+            <!--change to offline or busy as needed-->
+          </div>
+          <div class="nav-profile-text d-flex flex-column">
+            <span class="font-weight-bold mb-2">Admin</span>
+
+          </div>
+          <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/dashboard">
+          <span class="menu-title">Dashboard</span>
+          <i class="mdi mdi-home menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/category">
+          <span class="menu-title">Category</span>
+          <i class="mdi mdi-package-variant menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/products">
+          <span class="menu-title">Products</span>
+          <i class="mdi mdi-cart menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item bg-dark">
+        <a class="nav-link" href="/admin/users">
+          <span class="menu-title text-light">Users</span>
+          <i class="mdi mdi-account menu-icon text-light"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/orders">
+          <span class="menu-title">Orders</span>
+          <i class="mdi mdi-shopping menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+          <span class="menu-title">Offers</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-sale menu-icon"></i>
+        </a>
+        <div class="collapse" id="general-pages">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/admin/productOffer"> Product Offers </a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/categoryOffer"> Category Offers </a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/coupons">
+          <span class="menu-title">Coupon</span>
+          <i class="mdi mdi-tag menu-icon"></i>
+        </a>
+      </li>
+
+       <li class="nav-item">
+          <a class="nav-link" href="/admin/salesReport">
+            <span class="menu-title">Sales Report</span>
+            <i class="mdi mdi-chart-line menu-icon"></i>
+          </a>
+        </li>
+
+
+    </ul>
+  </nav>
+
+  <div class="main-panel">
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h3 class="page-title">
+          <span class="page-title-icon bg-gradient-dark text-white mr-2">
+            <i class="mdi mdi-account"></i>
+          </span> Blocked Users List
+        </h3>
+        <nav aria-label="breadcrumb">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+              <button class="btn btn-light" onclick="location.href='/admin/users'">Back to Users List</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>Options</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if(users.length>0){ for(let i=0;i<users.length;i++) { %>
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td><%=users[i].Name %></td>
+                  <td><%=users[i].Email %></td>
+                  <td> <%=users[i].Mobile %> </td>
+                  <td><button type="submit" class="btn btn-success" onclick="unblockUser('<%=users[i]._id %>')">UNBLOCK</button></td>
+                </tr>
+                <%} } else { %>
+                <tr>
+                  <td colspan="5" class="text-center">No users found</td>
+                </tr>
+                <% } %>
+
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-container mt-4">
+            <ul class="pagination justify-content-center">
+              <% if (currentPage > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
+              </li>
+              <% } %> <% for(let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+              </li>
+              <% } %> <% if (currentPage < totalPages) { %>
+              <li class="page-item">
+                <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
+              </li>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      function unblockUser(userId) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'This user will get unblocked',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'Cancel',
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Sending unblock request to the controller
+            axios.get(`/admin/users/unblockUser/?id=${userId}`)
+              .then((response) => {
+                // Checking success
+                if (response.data.success) {
+                  Swal.fire(
+                    'Unblocked!',
+                    'This user has been unblocked.',
+                    'success'
+                  ).then(() => {
+                    window.location.reload();
+                  });
+                } else {
+                  Swal.fire(
+                    'Error!',
+                    'Failed to unblock the user.',
+                    'error'
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error('Error unblocking the user:', error);
+                Swal.fire(
+                  'Error!',
+                  'An error occurred while unblocking the user.',
+                  'error'
+                );
+              });
+          }
+        });
+      }
+    </script>
+
+
+
+    <%- include('footer.ejs') %>

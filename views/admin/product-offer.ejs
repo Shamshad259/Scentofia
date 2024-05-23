@@ -1,0 +1,303 @@
+<%- include('header.ejs') %>
+
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item nav-profile">
+                    <a href="#" class="nav-link">
+                        <div class="nav-profile-image">
+                            <img src="/admin-assets/images/faces/face1.jpg" alt="profile">
+                            <span class="login-status online"></span>
+                            <!--change to offline or busy as needed-->
+                        </div>
+                        <div class="nav-profile-text d-flex flex-column">
+                            <span class="font-weight-bold mb-2">Admin</span>
+
+                        </div>
+                        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/dashboard">
+                        <span class="menu-title">Dashboard</span>
+                        <i class="mdi mdi-home menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/category">
+                        <span class="menu-title">Category</span>
+                        <i class="mdi mdi-package-variant menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/products">
+                        <span class="menu-title">Products</span>
+                        <i class="mdi mdi-cart menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">
+                        <span class="menu-title">Users</span>
+                        <i class="mdi mdi-account menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/orders">
+                        <span class="menu-title">Orders</span>
+                        <i class="mdi mdi-shopping menu-icon"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item bg-dark">
+                    <a class="nav-link" data-toggle="collapse" href="#general-pages" aria-expanded="false"
+                        aria-controls="general-pages">
+                        <span class="menu-title text-light">Offers</span>
+                        <i class="menu-arrow"></i>
+                        <i class="mdi mdi-sale menu-icon text-light"></i>
+                    </a>
+                    <div class="collapse" id="general-pages">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"> <a class="nav-link text-light" href="/admin/productOffer"> Product
+                                    Offers </a>
+                            </li>
+                            <li class="nav-item"> <a class="nav-link" href="/admin/categoryOffer"> Category Offers </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/coupons">
+                        <span class="menu-title">Coupon</span>
+                        <i class="mdi mdi-tag menu-icon"></i>
+                    </a>
+                </li>
+
+                 <li class="nav-item">
+          <a class="nav-link" href="/admin/salesReport">
+            <span class="menu-title">Sales Report</span>
+            <i class="mdi mdi-chart-line menu-icon"></i>
+          </a>
+        </li>
+
+
+            </ul>
+        </nav>
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title">
+                        <span class="page-title-icon bg-gradient-dark text-white mr-2">
+                            <i class="mdi mdi-sale"></i>
+                        </span> Offer
+                    </h3>
+                    <nav aria-label="breadcrumb">
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <span></span><button class="btn btn-dark" data-toggle="modal"
+                                    data-target="#productOfferModal">Create Product Offer</button>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Product Name</th>
+                                        <th>Offer Percentage (%)</th>
+                                        <th>Valid Till</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if(productOffers?.length>0){ for(let i=0;i<productOffers.length;i++) { %>
+                                            <tr class="text-center">
+                                                <td style="
+                                                max-width: 250px;
+                                                overflow-wrap: break-word;
+                                                word-wrap: break-word;
+                                                white-space: normal;
+                                                line-height: 1.5;
+                                                font-family: sans-serif;
+                                              ">
+                                                    <%=productOffers[i]?.productId.name %>
+                                                </td>
+                                                <td>
+                                                    <%=productOffers[i]?.offerPercentage %>
+                                                </td>
+                                                <td>
+                                                    <%=productOffers[i]?.expiryDate?.toLocaleDateString() %>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-danger"
+                                                        onclick="removeOffer('<%=productOffers[i]._id %>')">Delete</button>
+                                                </td>
+
+                                            </tr>
+
+                                            <%} } else { %>
+                                                <tr>
+                                                    <td colspan="4" class="text-center">No offers found</td>
+                                                </tr>
+                                                <% } %>
+
+                                </tbody>
+                            </table>
+                            <!-- Product Offer Modal -->
+                            <div class="modal fade" id="productOfferModal" tabindex="-1" role="dialog"
+                                aria-labelledby="productOfferModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <form class="modal-content bg-light text-dark" onsubmit="return validateProduct()"
+                                        method="post">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="productOfferModalLabel">Product Offer</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <label for="productName">Product Name</label>
+                                                <select class="form-control" id="productName" name="productId">
+                                                    <option selected value="" disabled>Select a product</option>
+                                                    <% for(let product of products){%>
+                                                        <option value="<%=product._id%>">
+                                                            <%=product.name%>
+                                                        </option>
+                                                        <%}%>
+                                                </select>
+                                                <small class="text-danger" id="productError"
+                                                    style="display: none;">Please select a product</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="productOfferPercentage">Offer Percentage</label>
+                                                <input type="number" class="form-control" id="productOfferPercentage"
+                                                    placeholder="Enter Offer Percentage" name="offerPercentage">
+                                                <small class="text-danger" id="productOfferError"
+                                                    style="display: none;">Offer percentage must be between 0 -
+                                                    100</small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="productExpiryDate">Expiry Date</label>
+                                                <input type="date" class="form-control" id="productExpiryDate"
+                                                    name="expiryDate">
+                                                <small class="text-danger" id="productExpiryDateError"
+                                                    style="display: none;">Select a valid date</small>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-light" data-dismiss="modal"
+                                                style="box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);">Close</button>
+                                            <button class="btn btn-dark"
+                                                style="box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);" type="submit">Save
+                                                changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <%- include('footer.ejs') %>
+
+                <script>
+                    const validateProduct = () => {
+                        let today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const product = document.getElementById("productName").selectedIndex;
+                        const offer = document.getElementById("productOfferPercentage").value.trim();
+                        const expireDateValue = document.getElementById("productExpiryDate").value;
+
+                        let expireDate;
+                    
+                        if (expireDateValue) {
+                            expireDate = new Date(expireDateValue);
+                        }
+
+                        let numberRegex = /^\d+$/;
+                        let isValid = true;
+
+                        if (product === 0) {
+                            document.getElementById("productError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("productError").style.display = "none"
+                        }
+
+                        if (!numberRegex.test(offer) || offer <= 0 || offer >= 100) {
+                            document.getElementById("productOfferError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("productOfferError").style.display = "none"
+                        }
+
+
+                        if (!expireDate || expireDate < today) {
+                            document.getElementById("productExpiryDateError").style.display = "block";
+                            isValid = false;
+                        } else {
+                            document.getElementById("productExpiryDateError").style.display = "none";
+                        }
+
+                        return isValid;
+                    }
+
+                    const removeOffer = (offerId) => {
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: 'This Offer will get removed',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'Cancel',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                axios.delete(`/admin/productOffer?id=${offerId}`)
+                                    .then((response) => {
+                                        if (response.data.success) {
+                                            Swal.fire(
+                                                'Removed!',
+                                                'The offer has been removed.',
+                                                'success'
+                                            ).then(() => {
+                                                window.location.reload();
+                                            });
+                                        } else {
+                                            Swal.fire(
+                                                'Error!',
+                                                'Failed to remove the offer.',
+                                                'error'
+                                            );
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        console.error('Error removing the offer:', error);
+                                        Swal.fire(
+                                            'Error!',
+                                            'An error occurred while removing the offer.',
+                                            'error'
+                                        );
+                                    });
+                            }
+                        });
+                    }
+
+
+                </script>

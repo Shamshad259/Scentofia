@@ -1,0 +1,163 @@
+<%- include('header.ejs') %>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3">
+      <div class="header__logo">
+        <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <nav class="header__menu mobile-menu">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/shop/men">Men</a></li>
+          <li class="active"><a href="/shop/women">Women</a></li>
+          <li><a href="/contactUs">Contact us</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="header__nav__option">
+       <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt="">
+          <%if(locals.wishlistCount>=0){%><span class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; "><%=wishlistCount%></span><%}%>
+        </a>
+        <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+          <%if(locals.cartCount>=0){%><span class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; "><%=cartCount%></span><%}%>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+
+<!-- Product Section Begin -->
+<section class="product spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="text-center">
+          <h2 class="font-weight-bold" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Get the Perfect Perfumes for You</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row product__filter d-flex justify-content-center mt-5 ">
+
+      <!-- Each Product -->
+      <% for (const product of products) { %>
+      <div class="col-lg-3 col-md-6 col-sm-6 mix new-arrivals m-4" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+        <div class="product__item">
+          <div class="product__item__pic">
+            <a href="/productPage?id=<%=product._id%>"><img src="/Product Images/<%=product.images[0]%>" alt="<%=product.name%>" class="set-bg"></a>
+            <span class="label">New</span>
+            <ul class="product__hover">
+              <% if (!locals.user) { %>
+              <li><a class="btn" href="/login"><i class="mdi mdi-heart-outline"></i></a></li>
+              <% } else if (!wishlist || !wishlist.some(item => String(item.productId) === String(product._id))) { %>
+              <li><a class="btn" onclick="addToWishlist('<%= product._id %>')"><i class="mdi mdi-heart-outline text-danger"></i></a></li>
+              <% } else { %>
+              <li><a class="btn" onclick="removeFromWishlist('<%= product._id %>')"><i class="mdi mdi-heart text-danger"></i></a></li>
+              <% } %>
+            </ul>
+          </div>
+
+          <div class="product__item__text">
+            <h6><%=product.name%></h6>
+            <a href="/productPage?id=<%=product._id%>" class="add-cart">View</a>
+            <div class="rating">
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+            </div>
+            <%if(product?.newPrice){%>
+            <span style="color: red; text-decoration: line-through;">Rs <%=product.price%></span>
+            <h5>Rs <%=product.newPrice%> </h5>
+            <%} else {%>
+            <h5>Rs <%=product.price%></h5>
+            <%}%>
+          </div>
+        </div>
+      </div>
+      <% } %>
+
+          </div>
+          <div class="pagination-container mt-4">
+            <ul class="pagination justify-content-center">
+              <% if (currentPage > 1) { %>
+              <li class="page-item">
+                <a class="page-link page-link-custom" href="?page=<%= currentPage - 1 %>" style="background-color: #fff;
+                        border-color: #000;
+                        color: #000;">Previous</a>
+              </li>
+              <% } %>
+              <% for(let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= i === currentPage ? 'bg-dark text-light' : 'btn-light text-dark' %>" style="border-color: #000;">
+                <a class="page-link page-link-custom <%= i === currentPage ? 'bg-dark text-light' : 'btn-light text-dark' %>" href="?page=<%= i %>" style="border-color: #000;"><%= i %></a>
+              </li>
+              <% } %>
+              <% if (currentPage < totalPages) { %>
+              <li class="page-item">
+                <a class="page-link page-link-custom" href="?page=<%= currentPage + 1 %>" style="background-color: #fff;
+                        border-color: #000;
+                        color: #000;">Next</a>
+              </li>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+</section>
+<!-- Product Section End -->
+
+
+<%- include('footer.ejs') %>
+
+<script>
+  const addToWishlist = (productId) => {
+    axios.get(`/addToWishlist?productId=${productId}`)
+      .then(response => {
+        Swal.fire(
+            "Success",
+            "Added to your Wishlist",
+            "success"
+          )
+          .then(() => {
+            window.location.reload();
+          })
+      })
+      .catch(error => {
+        Swal.fire(
+          "Error!",
+          "An error occured while adding product to the wishlist",
+          "error"
+        )
+      })
+  }
+
+  const removeFromWishlist = (productId) => {
+    axios.get(`/removeFromWishlist?productId=${productId}`)
+      .then((response) => {
+        Swal.fire(
+            "Success",
+            "Removed from your Wishlist",
+            "success"
+          )
+          .then(() => {
+            window.location.reload();
+          })
+          .catch(error => {
+            Swal.fire(
+              "Error!",
+              "An error occured while removing product from the wishlist",
+              "error"
+            )
+          })
+      })
+  }
+</script>

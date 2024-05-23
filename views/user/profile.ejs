@@ -1,0 +1,156 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3">
+      <div class="header__logo">
+        <a href="/home"><img src="/assets/img/logo.png" alt="" /></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <nav class="header__menu mobile-menu">
+        <ul>
+          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/shop/men">Men</a></li>
+          <li><a href="/shop/women">Women</a></li>
+          <li><a href="/contactUs">Contact us</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="header__nav__option">
+        <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt="">
+          <%if(locals.wishlistCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; ">
+            <%=wishlistCount%>
+          </span>
+          <%}%>
+                    </a>
+                    <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+                        <%if(locals.cartCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; ">
+            <%=cartCount%>
+          </span>
+          <%}%>
+                    </a>
+      </div>
+    </div>
+  </div>
+  <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+<div class="container">
+  <h1 class="text-center mb-4 font-weight-bold">User Profile</h1>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Name:</strong>
+              <%=user.Name%>
+          </li>
+          <li class="list-group-item"><strong>Email:</strong>
+            <%=user.Email%>
+          </li>
+          <li class="list-group-item"><strong>Mobile:</strong>
+            <%=user.Mobile%>
+          </li>
+          </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Profile Actions</h2>
+        <div class="list-group">
+          <button type="button" class="btn btn-dark btn-block mb-2" onclick="location.href='/profile/manageAddress'">Manage Addresses</button>
+          <button type="button" class="btn btn-dark btn-block mb-2" data-toggle="modal" data-target="#editProfileModal">Edit Profile</button>
+          <button type="button" class="btn btn-dark btn-block mb-2" onclick="location.href='/myOrders'">My
+            Orders</button>
+          <button type="button" class="btn btn-dark btn-block mb-2" onclick="location.href='/wallet'">Wallet</button>
+          <button type="button" class="btn btn-dark btn-block mb-2" onclick="location.href='/referralLink'">Referral Link</button>
+          <%if(user.Password){%>
+          <button type="button" class="btn btn-dark btn-block mb-2" onclick="location.href='/profile/changePassword'">Change Password</button>
+          <%}%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Form for editing profile -->
+          <form id="editProfileForm" method="post" action="/profile/editProfile" onsubmit="return validateForm()">
+            <div class="form-group">
+              <label for="editName">Name</label>
+              <input type="text" class="form-control" id="editName" value="<%=user.Name%>" name="name" required>
+          <small class="text-danger" id="nameError" style="display: none;">Enter a valid name</small>
+        </div>
+        <div class="form-group">
+          <label for="editEmail">Email address</label>
+          <input type="email" class="form-control" id="editEmail" value="<%=user.Email%>" name="email" disabled>
+        </div>
+
+        <div class="form-group">
+          <label for="editMobile">Mobile</label>
+          <input type="text" class="form-control" id="editMobile" value="<%=user.Mobile%>" name="mobile">
+          <small class="text-danger" id="mobileError" style="display: none;">Enter a valid mobile number</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%- include('footer.ejs') %>
+
+
+<script>
+  const validateForm = () => {
+
+    const name = document.getElementById('editName').value.trim();
+    const mobile = document.getElementById('editMobile').value;
+
+    console.log(name, email, mobile);
+    let isValid = true;
+
+    if (!name.match(/^[a-zA-Z\s]+$/)) {
+      document.getElementById('nameError').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('nameError').style.display = 'none';
+    }
+
+    if (mobile) {
+
+      if (!mobile.match(/^[6-9]\d{9}$/)) {
+        document.getElementById('mobileError').style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('mobileError').style.display = 'none';
+      }
+    }
+
+
+    return isValid;
+
+  }
+</script>

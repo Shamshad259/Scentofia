@@ -1,0 +1,155 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            <div class="header__logo">
+                <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <nav class="header__menu mobile-menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/shop/men">Men</a></li>
+                    <li><a href="/shop/women">Women</a></li>
+                    <li><a href="/contactUs">Contact us</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="header__nav__option">
+                <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt=""></a>
+                <a href="/cart"><img src="/assets/img/icon/cart.png" alt=""> </a>
+            </div>
+        </div>
+    </div>
+    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+<style>
+    .error-message {
+        color: #dc3545;
+        font-size: 0.8rem;
+    }
+    .card {
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">OTP Verification</h2>
+                    <form id="registrationForm" class="needs-validation" novalidate method="post" onsubmit="otpCheck(event)">
+                        <div class="text-danger" style="display: none;" id="wrongOtp">
+                            Wrong OTP
+                            </div>
+                        <!-- OTP -->
+                        <div class="form-group">
+                            <label for="otp">Enter OTP</label>
+                            <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP received" pattern="[0-9]{4}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid OTP.
+                            </div>
+                            <div id="resendContainer">
+                                <a href="/forgotOtp" id="resendLink" style="display: none;">Resend OTP</a>
+                                <span id="timerSection" style="display: none;color: #dc3545;">Resend OTP in <span id="timer"></span> seconds</span>
+                            </div>
+                            <div id="otpError" class="error-message" style="display: none;">Incorrect OTP.</div>
+                        </div>
+                        <button type="submit" id="registerButton" class="btn btn-primary btn-block" >Register</button>
+                        <p class="text-center mt-3">Already have an account? <a href="/login">Login</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+ function otpCheck(event) {
+    event.preventDefault();
+
+    const otpValue = document.getElementById('otp').value;
+
+    axios.post(`/forgotOtp`, { otp: otpValue })
+    .then((response) => {
+        if (response.data.success) {
+            location.href = "/newPassword";
+        } else {
+            document.getElementById("wrongOtp").style.display = "block";
+        }
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+
+    });
+}
+
+
+    (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var form = document.getElementById('registrationForm');
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+        
+        // Timer
+        let resendLink = document.getElementById('resendLink');
+        let timerSection = document.getElementById('timerSection');
+        let timerSpan = document.getElementById('timer');
+        let timerDuration = 59;
+        let timerInterval;
+
+        function startTimer() {
+            
+            resendLink.style.display = 'none';
+    
+            timerInterval = setInterval(() => {
+                if (timerDuration <= 0) {
+                    clearInterval(timerInterval);
+                    resendLink.style.display = 'block';
+                    timerSection.style.display = 'none';
+                    timerDuration = 59;
+                } else {
+                    timerSection.style.display = 'block';
+                    timerSpan.textContent = timerDuration;
+                    timerDuration--;
+                }
+            }, 1000);
+        }
+
+        function enableResend() {
+            startTimer();
+        }
+
+        resendLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            enableResend();
+        });
+        
+        // Initial timer start
+        startTimer();
+    }, false);
+})();
+
+</script>
+
+<%- include('footer.ejs') %>

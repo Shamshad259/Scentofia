@@ -1,0 +1,376 @@
+<%- include('header.ejs') %>
+
+
+<style>
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  .existing-image {
+    width: 150px;
+    height: auto;
+    display: block;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: rgb(255, 0, 0);
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 50%;
+    line-height: 1;
+    transition: background-color 0.3s;
+  }
+
+  .close-button:hover {
+    background-color: darkred;
+  }
+</style>
+
+<!-- partial -->
+<div class="container-fluid page-body-wrapper">
+  <!-- partial:partials/_sidebar.html -->
+  <nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+      <li class="nav-item nav-profile">
+        <a href="#" class="nav-link">
+          <div class="nav-profile-image">
+            <img src="/admin-assets/images/faces/face1.jpg" alt="profile">
+            <span class="login-status online"></span>
+            <!--change to offline or busy as needed-->
+          </div>
+          <div class="nav-profile-text d-flex flex-column">
+            <span class="font-weight-bold mb-2">Admin</span>
+
+          </div>
+          <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/dashboard">
+          <span class="menu-title">Dashboard</span>
+          <i class="mdi mdi-home menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/category">
+          <span class="menu-title">Category</span>
+          <i class="mdi mdi-package-variant menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item bg-dark">
+        <a class="nav-link" href="/admin/products">
+          <span class="menu-title text-light">Products</span>
+          <i class="mdi mdi-cart menu-icon text-light"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/users">
+          <span class="menu-title">Users</span>
+          <i class="mdi mdi-account menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/orders">
+          <span class="menu-title">Orders</span>
+          <i class="mdi mdi-shopping menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
+          <span class="menu-title">Offers</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-sale menu-icon"></i>
+        </a>
+        <div class="collapse" id="general-pages">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="/admin/productOffer"> Product Offers </a></li>
+            <li class="nav-item"> <a class="nav-link" href="/admin/categoryOffer"> Category Offers </a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/coupons">
+          <span class="menu-title">Coupon</span>
+          <i class="mdi mdi-tag menu-icon"></i>
+        </a>
+      </li>
+
+       <li class="nav-item">
+          <a class="nav-link" href="/admin/salesReport">
+            <span class="menu-title">Sales Report</span>
+            <i class="mdi mdi-chart-line menu-icon"></i>
+          </a>
+        </li>
+
+
+    </ul>
+  </nav>
+  <!-- partial -->
+  <div class="main-panel mt-5">
+    <div class="content-wrapper">
+      <div class="page-header">
+        <h3 class="page-title">
+          <span class="page-title-icon bg-gradient-dark text-white mr-2">
+            <i class="mdi mdi-package-variant"></i>
+          </span>Products
+        </h3>
+        <nav aria-label="breadcrumb">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">
+              <span></span>
+              <button class="btn btn-light" onclick="location.href='/admin/products'">Back to
+                Products</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+
+
+      <div class="col-12 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Edit Product</h4>
+            <br><br>
+
+            <form class="forms-sample" enctype="multipart/form-data">
+
+              <div class="form-group">
+                <label for="exampleInputName1">Product Name</label>
+                <input type="text" class="form-control" id="productName" name="productName" placeholder="Enter the Product Name" value="<%=product[0].name%>">
+                <small id="productNameError" class="text-danger"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleSelectGender">Category</label>
+                <select class="form-control" id="category" name="categoryName">
+                  <% for(let i=0;i<category.length;i++){ %>
+                  <option <%=category[i].name===product[0].category[0].name ? 'selected' : ''
+                                                %>><%= category[i].name %>
+                  </option>
+
+                  <% } %>
+
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Images</label>
+                <input type="file" name="images" class="file-upload-default" accept="image/*" multiple onchange="handleFileSelect(event)" id="imageInput">
+                <div class="input-group col-xs-12">
+                  <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image" id="fileCount" value="">
+                  <span class="input-group-append">
+                    <button class="file-upload-browse btn btn-gradient-light" type="button" onclick="document.getElementById('imageInput').click()">Upload</button>
+                  </span>
+                </div>
+                <small id="imageError" class="text-danger"></small>
+                <br>
+                <div id="imagePreview"></div>
+                <br>
+
+                <div class="existing-images">
+                  <h6>Existing Images</h6>
+                  <% for(let i=0;i<product[0].images.length;i++) { %>
+                  <div class="image-wrapper" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                    <img src="/Product Images/<%=product[0].images[i]%>" class="existing-image">
+                    <button type="button" class="close-button" onclick="removeImage(this,`<%=i%>`)">x</button>
+                  </div>
+                  <% } %>
+                </div>
+
+              </div>
+
+
+              <div class="form-group">
+                <label for="exampleInputName1">Quantity</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Enter the Quantity" value="<%=product[0].quantity%>">
+                <small id="quantityError" class="text-danger"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleInputName1">Price</label>
+                <input type="number" class="form-control" id="price" name="price" placeholder="Enter the Price" value="<%=product[0].price%>">
+                <small id="priceError" class="text-danger"></small>
+              </div>
+
+              <div class="form-group">
+                <label for="exampleTextarea1">Product Description</label>
+                <textarea class="form-control" id="productDescription" name="productDescription" rows="4"><%=product[0].description%></textarea>
+                <small id="productDescriptionError" class="text-danger"></small>
+              </div>
+
+              <button class="btn btn-gradient-dark mr-2" type="submit">Submit</button>
+              <a href="/admin/products" class="btn btn-light">Cancel</a>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        function validateForm() {
+          let productName = document.getElementById('productName').value.trim();
+          let quantity = document.getElementById('quantity').value.trim();
+          let price = document.getElementById('price').value.trim();
+          let productDescription = document.getElementById('productDescription').value.trim();
+          let images = document.querySelector(".file-upload-default");
+
+          let nameRegex = /^[a-zA-Z0-9\s]+$/;
+          let numberRegex = /^\d+$/;
+          let priceRegex = /^\d+(\.\d{1,2})?$/;
+          let isValid = true;
+
+          document.getElementById('productNameError').innerText = '';
+          document.getElementById('quantityError').innerText = '';
+          document.getElementById('priceError').innerText = '';
+          document.getElementById('productDescriptionError').innerText = '';
+          document.getElementById('imageError').innerText = '';
+
+          if (!nameRegex.test(productName)) {
+            document.getElementById('productNameError').innerText = 'Product Name must be of only letters and numbers';
+            isValid = false;
+          }
+
+          if (!quantity.match(numberRegex) || quantity < 0) {
+            document.getElementById('quantityError').innerText = 'Quantity should not be a negetive number';
+            isValid = false;
+          }
+
+          if (!priceRegex.test(price) || price <= 0) {
+            document.getElementById('priceError').innerText = 'Price must be a number greater than 0';
+            isValid = false;
+          }
+
+          if (productDescription.length === 0) {
+            document.getElementById('productDescriptionError').innerText = 'Product Description is required';
+            isValid = false;
+          }
+
+          // if (deletedIndices.length > images.files.length) {
+          //   document.getElementById('imageError').innerText = 'Select atleast 3 images';
+          //   isValid = false;
+          // }
+
+          for (let i = 0; i < images.files.length; i++) {
+            let fileName = images.files[i].name;
+            let extensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!extensions.test(fileName)) {
+              document.getElementById('imageError').innerText = 'Select only valid Image files (jpg/jpeg/png)';
+              isValid = false;
+            }
+          }
+
+          return isValid;
+        }
+
+
+        let deletedIndices = [];
+
+        function removeImage(buttonElement, index) {
+          const imageWrapper = buttonElement.closest('.image-wrapper');
+          imageWrapper.remove();
+          deletedIndices.push(index);
+        };
+
+        document.querySelector('.forms-sample').addEventListener('submit', (event) => {
+          event.preventDefault();
+          if (validateForm()) {
+            editProduct();
+          }
+        });
+
+
+        function handleFileSelect(event) {
+          const preview = document.getElementById('imagePreview');
+          preview.innerHTML = '';
+
+          const files = event.target.files;
+          const filesAmount = files.length;
+
+          document.getElementById('fileCount').value = filesAmount + ' files selected';
+
+          for (let i = 0; i < filesAmount; i++) {
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+              const imageWrapper = document.createElement('div');
+              imageWrapper.style.position = 'relative';
+              imageWrapper.style.display = 'inline-block';
+              imageWrapper.style.marginRight = '10px';
+
+              const imageElement = document.createElement('img');
+              imageElement.src = event.target.result;
+              imageElement.style.width = '100px';
+              imageElement.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)'
+
+              const removeButton = document.createElement('button');
+              removeButton.innerText = 'x';
+              removeButton.style.position = 'absolute';
+              removeButton.style.top = '0';
+              removeButton.style.right = '0';
+              removeButton.style.color = 'rgb(255, 255, 255)';
+              removeButton.style.backgroundColor = 'rgb(255, 0, 0)';
+              removeButton.style.border = 'none';
+              removeButton.style.borderRadius = '50%'
+              removeButton.style.cursor = 'pointer';
+              removeButton.onclick = function() {
+                const newFiles = Array.from(files).filter((file, index) => index !== i);
+                const fileList = new DataTransfer();
+
+                newFiles.forEach(file => {
+                  fileList.items.add(file);
+                });
+
+                event.target.files = fileList.files;
+                handleFileSelect(event);
+
+                document.getElementById('imageInput').value = '';
+              };
+
+              imageWrapper.appendChild(imageElement);
+              imageWrapper.appendChild(removeButton);
+              preview.appendChild(imageWrapper);
+            };
+
+            reader.readAsDataURL(files[i]);
+          }
+        }
+
+        document.getElementById('imageInput').addEventListener('click', function() {
+          this.value = '';
+        });
+
+        function editProduct() {
+          const form = document.querySelector('.forms-sample');
+          if (deletedIndices.length > 0) {
+            const deletedIndicesInput = document.createElement('input');
+            deletedIndicesInput.type = 'hidden';
+            deletedIndicesInput.name = 'deletedIndices';
+            deletedIndicesInput.value = JSON.stringify(deletedIndices);
+            form.appendChild(deletedIndicesInput);
+            deletedIndices = [];
+          }
+
+
+          form.method = 'POST';
+          form.action = "/admin/products/editProduct?id=<%=product[0]._id%>";
+          form.submit();
+        }
+      </script>
+
+
+      <%- include('footer.ejs') %>

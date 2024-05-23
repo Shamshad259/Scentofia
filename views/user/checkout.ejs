@@ -1,0 +1,535 @@
+<%- include('header.ejs') %>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-md-3">
+        <div class="header__logo">
+          <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <nav class="header__menu mobile-menu">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/shop">Shop</a></li>
+            <li><a href="/shop/men">Men</a></li>
+            <li><a href="/shop/women">Women</a></li>
+            <li><a href="/contactUs">Contact us</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col-lg-3 col-md-3">
+        <div class="header__nav__option">
+        <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt=""><span class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; "><%=wishlistCount%></span>
+         </a>
+          <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+            <span class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; ">
+              <%=cartCount%>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+  </div>
+  </header>
+
+  <!-- Breadcrumb Section Begin -->
+  <section class="breadcrumb-option">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="breadcrumb__text">
+            <h4>Check Out</h4>
+            <div class="breadcrumb__links">
+              <a href="/home">Home</a>
+              <a href="/shop">Shop</a>
+              <a href="/cart">Cart</a>
+              <span>Check Out</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Breadcrumb Section End -->
+
+  <!-- Checkout Section Begin -->
+  <section class="checkout spad">
+    <div class="container">
+      <div class="checkout__form">
+        <% let subtotal=0 %>
+          <% let totalPrice=0 %>
+            <form>
+              <div class="row">
+                <div class="col-lg-8 col-md-6">
+                  <div class="address-section">
+                    <h5>Select Address</h5>
+                    <div class="address-list">
+                      <% if(addresses?.address?.length> 0) { %>
+                        <% addresses.address.forEach((address, index)=> { %>
+                          <div class="card mb-3">
+                            <div class="card-body">
+                              <div class="custom-control custom-radio">
+                                <input type="radio" id="address<%= index %>" <%=index===0?"checked":"" %>
+                                name="selectedAddress" value="<%= address._id %>" class="custom-control-input">
+                                  <label class="custom-control-label" for="address<%= index %>">
+                                    <strong>
+                                      <%= address.name %>
+                                    </strong>
+                                    <br>
+                                    <%= address.house %>, <%= address.locality %>,<br>
+                                        <%= address.city %>, <%= address.state %>, <%= address.pincode %>
+                                  </label>
+                                  <span class="float-right">
+                                    <i class="bi bi-info-circle text-primary mr-1"></i>
+                                    <span>
+                                      <%= address.type %>
+                                    </span>
+                                  </span>
+                              </div>
+                            </div>
+                          </div>
+                          <% }); %>
+                            <% } else { %>
+                              <div class="alert alert-warning" role="alert">
+                                No Addresses Available
+                              </div>
+                              <% } %>
+                                <a href="#" class="btn btn-dark btn-block mb-2" data-toggle="modal"
+                                  data-target="#addAddressModal">Add
+                                  New Address</a>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <div class="card bg-light mb-3">
+                    <div class="card-header text-center">
+                      <h6>Discount codes</h6>
+                    </div>
+                    <div class="card-body">
+                      <form action="#">
+                        <div class="input-group mb-3">
+                          <input type="number" class="form-control" id="couponCode" placeholder="Coupon code">
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit"
+                              onclick="applyCoupon()">Apply</button>
+                          </div>
+                        </div>
+                        <%if(coupons&&coupons?.length>0){%>
+                          <button class="btn btn-link" id="viewCoupons" onclick="viewCoupon()">View Coupons
+                            Available</button>
+                            <%if(discount){%>
+        <button class="btn btn-danger" id="removeCoupon" onclick="removeCoupon()">Remove Coupon</button>
+                            <%}%>
+
+                          <%} else {%>
+                            <div class="text-danger">No Coupons Available</div>
+                            <%}%>
+                              <div class="text-danger" style="display: none;" id="couponError1">Invalid Coupon</div>
+                              <div class="text-danger" style="display: none;" id="couponError2">Not eligible for this
+                                coupon</div>
+                              <%if(coupons){%>
+                                <div class="coupons" id="coupon" style="display: none;">
+                                  <ul class="list-group">
+                                    <%for(let i=0; i<coupons.length; i++){%>
+                                      <li class="list-group-item">
+                                        <div class="coupon-content">
+                                          <div class="offer-text">If purchased above <strong> Rs
+                                              <%=coupons[i].minPrice-1%></strong></div>
+                                          <div class="badge bg-info ">
+                                            <%=coupons[i].offerPercentage%>% Discount
+                                          </div>
+                                          <div class="coupon-code">Use Code: <strong>
+                                              <%=coupons[i].couponCode%>
+                                            </strong></div>
+
+
+                                        </div>
+                                      </li>
+                                      <%}%>
+                                  </ul>
+                                </div>
+                                <%}%>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="checkout__order">
+                    <h4 class="order__title">Your order</h4>
+                    <div class="checkout__order__products">Product <span>Total</span></div>
+                    <ul class="checkout__total__products">
+
+                      <% for(let i=0;i<cart.items.length;i++){%>
+                        <li class="d-flex justify-content-between"><span>
+                            <%=cart.items[i].productId.name%>
+                          </span>
+
+                          <%if(cart?.items[i]?.productId?.newPrice) {%>
+                            <strong style="text-wrap: nowrap;">Rs
+                              <%=cart.items[i].productId.newPrice*cart.items[i].quantity%>
+                                .00
+                            </strong>
+                            <%} else {%>
+                              <strong style="text-wrap: nowrap;">Rs
+                                <%=cart.items[i].productId.price*cart.items[i].quantity%>
+                                  .00
+                              </strong>
+                              <%}%>
+                        </li>
+
+                        <%if(cart?.items[i]?.productId?.newPrice) {%>
+                          <% subtotal +=cart.items[i].productId.newPrice*cart.items[i].quantity%>
+                            <% totalPrice=subtotal%>
+                              <%} else {%>
+                                <% subtotal +=cart.items[i].productId.price*cart.items[i].quantity%>
+                                  <% totalPrice=subtotal%>
+                                    <%}%>
+                                      <%}%>
+                    </ul>
+                    <ul class="checkout__total__all">
+                      <li>Subtotal <span>Rs <%=subtotal%>.00</span></li>
+                      <%if(discount){%>
+
+                        <li>Discount <span class="text-success">-Rs <%=discount%>.00</span></li>
+                        <% totalPrice=subtotal - discount%>
+                          <%}%>
+                            <li>Delivery Charge <span>Rs 50.00</span></li>
+                            <% totalPrice = totalPrice+50%>
+                            <li>Total <span>Rs <%=totalPrice%>.00</span></li>
+                    </ul>
+
+                    <div class="checkout__input__radio">
+                      <label for="payment">
+                        <input type="radio" id="payment" name="paymentMethod" value="cod">
+                        <span class="checkmark"></span>
+                        Cash on delivery
+                      </label>
+                      <span class="text-danger" style="display: none;" id="codError">Cannot place COD over Rs
+                        1000</span>
+                    </div>
+                    <div class="checkout__input__radio">
+                      <label for="wallet">
+                        <input type="radio" id="wallet" name="paymentMethod" value="wallet">
+                        <span class="checkmark"></span>
+                        Wallet
+                      </label>
+                      <span class="text-danger" style="display: none;" id="walletError">Insufficient Balance</span>
+                    </div>
+                    <div class="checkout__input__radio">
+                      <label for="razorpay">
+                        <input type="radio" id="razorpay" name="paymentMethod" value="razorpay">
+                        <span class="checkmark"></span>
+                        Razorpay
+                      </label>
+
+                      <input type="hidden" name="totalPrice" value="<%= totalPrice %>">
+                    </div>
+                    <button type="submit" class="site-btn" onclick="proceed(event)">PLACE
+                      ORDER</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+      </div>
+    </div>
+  </section>
+  <!-- Checkout Section End -->
+
+  <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Address form -->
+          <form id="addressForm" method="post" action="/checkout" onsubmit="return validateForm()">
+            <%if(discount>0){%>
+              <input type="hidden" name="discount" value="<%= discount %>">
+              <%}%>
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" id="name" placeholder="Enter name" name="name">
+                  <div class="error-message text-danger" id="nameError" style="display: none;">Please provide
+                    a valid name.</div>
+                </div>
+
+                <div class="form-group">
+                  <label>Type of Address</label><br>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="addressType" id="home" value="Home" checked>
+                    <label class="form-check-label" for="home">Home</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="addressType" id="work" value="Work">
+                    <label class="form-check-label" for="work">Work</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="addressType" id="other" value="Other">
+                    <label class="form-check-label" for="other">Other</label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="address1">House Name/No.</label>
+                  <input type="text" class="form-control" id="house" placeholder="Enter address line 1" name="house">
+                  <div class="error-message text-danger" id="houseError" style="display: none;">Please provide
+                    a house name or number.</div>
+                </div>
+
+                <div class="form-group">
+                  <label for="city">Locality</label>
+                  <input type="text" class="form-control" id="locality" placeholder="Enter locality" name="locality">
+                  <div class="error-message text-danger" id="localityError" style="display: none;">Please
+                    provide a valid locality.</div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="Enter city" name="city">
+                    <div class="error-message text-danger" id="cityError" style="display: none;">Please
+                      provide a valid city.</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="state">State</label>
+                    <input type="text" class="form-control" id="state" placeholder="Enter state" name="state">
+                    <div class="error-message text-danger" id="stateError" style="display: none;">Please
+                      provide a valid state.</div>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="pincode">Pincode</label>
+                    <input type="text" class="form-control" id="pincode" placeholder="Enter pincode" name="pincode">
+                    <div class="error-message text-danger" id="pincodeError" style="display: none;">Please
+                      provide a valid 6-digit pincode.</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="mobile">Mobile</label>
+                  <input type="text" class="form-control" id="mobile" placeholder="Enter mobile number" name="mobile">
+                  <div class="error-message text-danger" id="mobileError" style="display: none;">Please
+                    provide a valid mobile number.</div>
+                </div>
+
+                <button type="submit" class="btn btn-dark btn-block mb-2">Save Address</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('footer.ejs') %>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+      function validateForm() {
+        const name = document.getElementById('name').value.trim();
+        const house = document.getElementById('house').value.trim();
+        const locality = document.getElementById('locality').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const state = document.getElementById('state').value.trim();
+        const pincode = document.getElementById('pincode').value.trim();
+        const mobile = document.getElementById('mobile').value.trim();
+
+        let isValid = true;
+
+        if (!name.match(/^[a-zA-Z\s]+$/)) {
+          document.getElementById('nameError').style.display = 'block';
+          isValid = false;
+        } else {
+          document.getElementById('nameError').style.display = 'none';
+        }
+
+        if (!house.match(/^[a-zA-Z\s]+|\d$/)) {
+          document.getElementById('houseError').style.display = 'block';
+          isValid = false;
+        } else {
+          document.getElementById('houseError').style.display = 'none';
+        }
+
+        if (!locality.match(/^[a-zA-Z\s]+$/)) {
+          document.getElementById('localityError').style.display = 'block';
+          isValid = false;
+        } else {
+          document.getElementById('localityError').style.display = 'none';
+        }
+
+        if (!mobile.match(/^[6-9]\d{9}$/)) {
+          document.getElementById('mobileError').style.display = 'block';
+          isValid = false;
+        } else {
+          document.getElementById('mobileError').style.display = 'none';
+        }
+
+        if (!pincode.match(/^[1-9]\d{5}$/)) {
+          document.getElementById('pincodeError').style.display = 'block';
+          isValid = false;
+        } else {
+          document.getElementById('pincodeError').style.display = 'none';
+        }
+
+        if (!city.match(/^[a-zA-Z\s]+$/)) {
+          document.getElementById('cityError').style.display = 'block';
+          isValid = false;
+        } else {
+          document.getElementById('cityError').style.display = 'none';
+        }
+
+        if (!state.match(/^[a-zA-Z\s]+$/)) {
+          document.getElementById('stateError').style.display = 'block';
+          isValid = false;
+        } else {
+          document.getElementById('stateError').style.display = 'none';
+        }
+
+        return isValid;
+      }
+
+
+      function proceed(event) {
+        event.preventDefault();
+        const selectedAddress = document.querySelector("input[name='selectedAddress']:checked");
+        if (!selectedAddress) {
+          Swal.fire(
+            "Select an address to proceed",
+            "",
+            "warning"
+          )
+          return false;
+        }
+
+        const selectedPaymentMethod = document.querySelector("input[name='paymentMethod']:checked");
+        if (!selectedPaymentMethod) {
+          Swal.fire(
+            "Select a payment method to proceed",
+            "",
+            "warning"
+          )
+          return false;
+        }
+
+
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'The order will get placed',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'Cancel',
+          reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const formData = {
+              selectedAddress: selectedAddress.value,
+              paymentMethod: selectedPaymentMethod.value,
+              totalPrice: document.querySelector("input[name='totalPrice']").value
+            };
+
+            axios.post(`/createOrder`, formData)
+              .then((response) => {
+                if (response.data.success && selectedPaymentMethod.value === 'razorpay') {
+                  let options = {
+                    "key": response.data.key_id,
+                    "amount": response.data.amount,
+                    "currency": "INR",
+                    "name": "Scentofia",
+                    "description": "Test Transaction",
+                    "order_id": response.data.order_id,
+                    "handler": function (response) {
+                      if (response.error) {
+                        // Payment failed
+                        window.location.href = "/orderFailed"
+                      } else if (response.razorpay_payment_id) {
+                        // Payment succeeded
+                        window.location.href = "/orderSuccess";
+                      }
+
+                    },
+
+                    "notes": {
+                      "address": "Razorpay Corporate Office"
+                    },
+                    "theme": {
+                      "color": "#F37254"
+                    }
+                  };
+                  let rzp1 = new Razorpay(options);
+                  rzp1.open();
+                  rzp1.on('payment.failed', (response) => {
+                    setTimeout(() => {
+                      rzp1.close();
+                      window.location.href = "/orderFailed";
+
+                    }, 3000);
+
+                  })
+
+                } else if (response.data.success && selectedPaymentMethod.value === 'wallet') {
+                  if (response.data.message === "Insufficient Balance") {
+                    document.getElementById("walletError").style.display = "block";
+                    document.getElementById("codError").style.display = "none";
+                    return false;
+                  } else {
+                    window.location.href = "/orderSuccess";
+                  }
+                } else {
+                  if (response.data.message === "Cannot place order in COD") {
+                    document.getElementById("codError").style.display = "block";
+                    document.getElementById("walletError").style.display = "none";
+                    return false;
+                  }
+                  window.location.href = "/orderSuccess";
+
+                }
+              })
+              .catch((error) => {
+                console.error('Error placing the order:', error);
+                Swal.fire(
+                  'Error!',
+                  'An error occurred while placing the order.',
+                  'error'
+                );
+              });
+          }
+        });
+      }
+
+
+      function viewCoupon() {
+        event.preventDefault()
+        document.getElementById("coupon").style.display = "block";
+        document.getElementById("viewCoupons").style.display = "none";
+      }
+
+      function removeCoupon(){
+        window.location.href = "/checkout"
+      }
+
+      function applyCoupon() {
+        event.preventDefault();
+        let couponCode = document.getElementById("couponCode").value.trim();
+        let totalPrice = document.querySelector("input[name='totalPrice']").value
+        axios.get(`/couponCheck?couponCode=${couponCode}&totalPrice=${totalPrice}`)
+          .then((response) => {
+            if (response.data.success && response.data.message === "Not Valid Coupon") {
+              document.getElementById("couponError1").style.display = "block";
+              document.getElementById("couponError2").style.display = "none";
+              return false;
+            } else if (response.data.success && response.data.message === "Not Eligible for this coupon") {
+              document.getElementById("couponError1").style.display = "none";
+              document.getElementById("couponError2").style.display = "block";
+              return false;
+            } else {
+              window.location.href = `/checkout?coupon=${response.data.coupon}`
+            }
+          })
+
+
+      }
+      
+    </script>

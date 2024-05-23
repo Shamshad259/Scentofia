@@ -1,0 +1,76 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3">
+      <div class="header__logo">
+        <a href="/home"><img src="/assets/img/logo.png" alt="" /></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <nav class="header__menu mobile-menu">
+        <ul>
+          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/shop/men">Men</a></li>
+          <li><a href="/shop/women">Women</a></li>
+          <li><a href="/contactUs">Contact us</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="header__nav__option">
+        <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt="">
+          <%if(locals.wishlistCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; ">
+            <%=wishlistCount%>
+          </span>
+          <%}%>
+                    </a>
+                    <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+                        <%if(locals.cartCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; ">
+            <%=cartCount%>
+          </span>
+          <%}%>
+                    </a>
+      </div>
+    </div>
+  </div>
+  <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+
+
+<div class="container mt-3 mb-3">
+  <h1 class="text-center mb-4 font-weight-bold">Referral</h1>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Referral Link:</h2>
+          <div class="input-group">
+            <input type="text" class="form-control" id="referralLink" value="http://localhost:4000/register?referralId=<%=user.referralId%>" readonly>
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button" id="copyReferralLink">Copy</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+<%- include('footer.ejs') %>
+
+<script>
+  document.getElementById("copyReferralLink").addEventListener("click", function() {
+    const referralLink = document.getElementById("referralLink");
+    referralLink.select();
+    referralLink.setSelectionRange(0, 99999);
+
+    document.execCommand("copy");
+
+    const copyButton = document.getElementById("copyReferralLink");
+    copyButton.innerText = "Copied!";
+  });
+</script>

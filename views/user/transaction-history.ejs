@@ -1,0 +1,90 @@
+<%- include('header.ejs') %>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3">
+      <div class="header__logo">
+        <a href="/home"><img src="/assets/img/logo.png" alt="" /></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <nav class="header__menu mobile-menu">
+        <ul>
+          <li class="active"><a href="/home">Home</a></li>
+          <li><a href="/shop">Shop</a></li>
+          <li><a href="/shop/men">Men</a></li>
+          <li><a href="/shop/women">Women</a></li>
+          <li><a href="/contactUs">Contact us</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="header__nav__option">
+        <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt="">
+          <%if(locals.wishlistCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; ">
+            <%=wishlistCount%>
+          </span>
+          <%}%>
+                    </a>
+                    <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+                        <%if(locals.cartCount>=0){%> <span id="cartCount" class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; ">
+            <%=cartCount%>
+          </span>
+          <%}%>
+                    </a>
+      </div>
+    </div>
+  </div>
+  <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+
+
+<div class="container mt-3 mb-3">
+  <h1 class="text-center mb-4 font-weight-bold">Transaction History</h1>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Closing Balance</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example transaction rows (replace with actual data) -->
+              <%if(wallet){%>
+                <%for(let i=wallet?.history.length-1;i>=0;i--){%>
+                  <tr>
+                    <td><%=wallet?.history[i]?.date?.toLocaleDateString()%></td>
+                    <td class="amount <%if(wallet?.history[i]?.transactionType==="Credit"){%> 
+                    text-success
+                    <%} else {%> text-danger <%}%>  ">
+                    <%=wallet?.history[i]?.amount%>
+                    </td>
+                    <td><%=wallet?.history[i]?.newBalance%></td>
+                    <td><%=wallet?.history[i]?.transactionType%></td>
+                  </tr>
+                <%}%>
+              <% } else {%>
+                <tr>
+                  <td colspan="4" class="text-center">
+                    No transaction history found
+                  </td>
+                </tr>
+                <%}%>
+              <!-- Add more rows as needed -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer.ejs') %>

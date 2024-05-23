@@ -1,0 +1,294 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-3 col-md-3">
+      <div class="header__logo">
+        <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <nav class="header__menu mobile-menu">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li class="active"><a href="/shop">Shop</a></li>
+          <li><a href="/shop/men">Men</a></li>
+          <li><a href="/shop/women">Women</a></li>
+          <li><a href="/contactUs">Contact us</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-3">
+      <div class="header__nav__option">
+      <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt=""><span class="cart-badge badge bg-danger ml-1" style="color: white; border-radius: 50%; "><%=wishlistCount%></span>
+         </a>
+        <a href="/cart"><img src="/assets/img/icon/cart.png" alt="">
+          <span class="cart-badge badge bg-danger" style="color: white; border-radius: 50%; "><%=cartCount%></span>
+         </a>
+      </div>
+    </div>
+  </div>
+  <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb__text">
+          <h4>Shopping Cart</h4>
+          <div class="breadcrumb__links">
+            <a href="/home">Home</a>
+            <a href="/shop">Shop</a>
+            <span>Shopping Cart</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="shopping__cart__table">
+          <% let total = 0;%>
+          <% if(cart?.items?.length>0){%>
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <%  for(let i=0;i<cart.items.length;i++){%>
+
+              <tr>
+                <td class="product__cart__item">
+                  <div class="product__cart__item__pic">
+                    <img src="/Product Images/<%=cart.items[i].productId.images[0]%>" alt="" width="100px">
+                  </div>
+                  <div class="product__cart__item__text">
+                    <h6><%=cart.items[i].productId.name%></h6>
+                    <% if(cart?.items[i]?.productId?.newPrice){%>
+                    <h5>Rs <%=cart.items[i].productId.newPrice%></h5>
+                    <%} else {%>
+                    <h5>Rs <%=cart.items[i].productId.price%></h5>
+                    <%}%>
+                  </div>
+                </td>
+                <td class="quantity__item">
+
+                  <%if(cart.items[i].productId.quantity===0){%>
+                    <span id="outOfStock<%=i%>" class="text-danger">Out of Stock</span>
+                    <%} else {%>
+                    <div class="quantity">
+                      <div class="qty-input d-flex">
+
+                        <button class="qty-count qty-count--minus" data-action="minus" type="button" onclick="decrement(<%if(cart?.items[i]?.productId?.newPrice){%> '<%=cart.items[i].productId.newPrice%>' <%} else {%> '<%=cart.items[i].productId.price%>' <%}%>,'<%=cart.items[i].productId.quantity%>','<%=i%>','<%=cart.items[i].productId._id%>')">-</button>
+
+                        <input class="product-qty" id="qty<%=i%>" type="text" name="product-qty" min="1" max="<%=cart.items[i].productId.quantity%>" value="<%=cart.items[i].quantity%>" disabled style="width: 25px;">
+
+                        <button class="qty-count qty-count--add" data-action="add" type="button" onclick="increment(<%if(cart?.items[i]?.productId?.newPrice){%> '<%=cart.items[i].productId.newPrice%>' <%} else {%> '<%=cart.items[i].productId.price%>' <%}%>,'<%=cart.items[i].productId.quantity%>','<%=i%>','<%=cart.items[i].productId._id%>')">+</button>
+                      </div>
+                    </div>
+                    <%if(cart.items[i].quantity===cart.items[i].productId.quantity){%>
+                    <span id="outOfQuantity<%=i%>" class="text-danger">Stock left is <%=cart.items[i].productId.quantity%></span>
+                    <%}%>
+                                                <%}%>
+                </td>
+                <% if(cart?.items[i]?.productId?.newPrice){%>
+                <td class="cart__price" id="subtotal<%=i%>">Rs <%=cart.items[i].productId.newPrice*cart.items[i].quantity%>.00</td>
+                <%} else {%>
+                <td class="cart__price" id="subtotal<%=i%>">Rs <%=cart.items[i].productId.price*cart.items[i].quantity%>.00</td>
+                <%}%>
+                
+                <td class="cart__close">
+                  <button type="button" class="btn btn-sm" onclick="removeFromCart('<%=i%>')">
+                <i class="fa fa-close"></i>
+                </button>
+                </td>
+                <% if(cart?.items[i]?.productId?.newPrice){%>
+                <% total+=cart.items[i].productId.newPrice*cart.items[i].quantity;%>
+                <%} else {%>
+
+                <% total+=cart.items[i].productId.price*cart.items[i].quantity;%>
+                <%}%>
+              </tr>
+              <% }%>
+
+                <%} else {%>
+                <img src="/assets/images/no_item.png" alt="">
+                <%}%>
+                                
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="continue__btn">
+                                <a href="/shop">Continue Shopping</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                   
+                    <div class="cart__total">
+                        <h6>Cart total</h6>
+                        <ul>
+                            <!-- <li>Subtotal <span>Rs <%=total%></span></li> -->
+                <li>Total<span id="total"><%=total%>.00</span><span>Rs&nbsp&nbsp</span></li>
+                </ul>
+                <button class="primary-btn" onclick="return stockCheck()">Proceed to checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Shopping Cart Section End -->
+
+<%- include('footer.ejs') %>
+
+<script>
+  const decrement = (price, stock, i, pId) => {
+    let quantity = Number(document.getElementById(`qty${i}`).value);
+    quantity--;
+    if (quantity < 1) {
+      quantity = 1;
+      Swal.fire(
+        "Warning",
+        "Quantity cannot be less than 1",
+        "warning"
+      );
+    } else {
+      axios.get(`/decrementCart?index=${i}`)
+        .then((response) => {
+          let subtotal = Number(quantity) * Number(price);
+          document.getElementById(`subtotal${i}`).textContent = `Rs ${subtotal.toFixed(2)}`;
+          document.getElementById(`qty${i}`).value = quantity;
+          const total = Number(document.getElementById("total").textContent);
+          document.getElementById("total").textContent = `${(Number(total) - Number(price)).toFixed(2)}`
+        })
+        .catch((error) => {
+          Swal.fire(
+            "Error",
+            "Oops!! Something went wrong",
+            "error"
+          )
+        })
+    }
+
+  }
+
+  const increment = (price, stock, i, pId) => {
+    let quantity = Number(document.getElementById(`qty${i}`).value);
+    quantity++;
+    if (quantity > 5) {
+      quantity--;
+      Swal.fire(
+        "Sorry",
+        "You can't buy more than 5 quantity",
+        "warning"
+      );
+    } else if (quantity > stock) {
+      quantity = stock;
+      Swal.fire(
+        "Warning",
+        "You reached maximum quantity available",
+        "warning"
+      );
+    } else {
+      axios.get(`/incrementCart?index=${i}`)
+        .then((response) => {
+          let subtotal = Number(quantity) * Number(price);
+          document.getElementById(`subtotal${i}`).textContent = `Rs ${subtotal.toFixed(2)}`;
+          document.getElementById(`qty${i}`).value = quantity;
+          const total = Number(document.getElementById("total").textContent);
+          document.getElementById("total").textContent = `${(Number(total) + Number(price)).toFixed(2)}`
+        })
+        .catch((error) => {
+          Swal.fire(
+            "Error",
+            "Oops!! Something went wrong",
+            "error"
+          )
+        })
+    }
+
+  }
+
+  const removeFromCart = (index) => {
+    Swal.fire({
+        title: "Are you Sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Remove",
+        cancelButtonText: "Cancel"
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios.get(`/removeFromCart?index=${index}`)
+            .then((response) => {
+              Swal.fire({
+                  title: "Removed",
+                  textContent: "Product removed from cart successfully",
+                  icon: "success",
+                  confirmButtonText: "Ok"
+                })
+                .then((res) => {
+                  if (res.isConfirmed) {
+                    window.location.reload();
+                  }
+                })
+            })
+            .catch((error) => {
+              Swal.fire("Error", "Oops! Something went wrong", "error");
+            });
+        }
+      })
+      .catch((error) => {
+        Swal.fire("Error", "Oops! Something went wrong", "error");
+      });
+  }
+
+  const stockCheck = () => {
+    axios.get("/stockCheck")
+      .then((response) => {
+        if (response.data.success) {
+          location.href = "/checkout";
+        } else {
+          Swal.fire({
+                title: "Warning",
+                text: response.data.message,
+                icon: "warning",
+                confirmButtonText: "Ok"
+              }
+
+            )
+            .then((result) => {
+              if (result.isConfirmed) {
+                window.location.reload();
+              }
+            })
+        }
+      })
+      .catch((error) => {
+        "Error",
+        "Oops..Something went wrong",
+        "error"
+      });
+  }
+</script>

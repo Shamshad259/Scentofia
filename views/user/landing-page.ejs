@@ -1,0 +1,219 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            <div class="header__logo">
+                <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <nav class="header__menu mobile-menu">
+                <ul>
+                    <li class="active"><a href="/">Home</a></li>
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/shop/men">Men</a></li>
+                    <li><a href="/shop/women">Women</a></li>
+                    <li><a href="/contactUs">Contact us</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="header__nav__option">
+                <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt=""></a>
+                <a href="/cart"><img src="/assets/img/icon/cart.png" alt=""> </a>
+            </div>
+        </div>
+    </div>
+    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+    <!-- Banner Section Begin -->
+    <section class="hero">
+        <div class="hero__slider owl-carousel">
+            <div class="hero__items set-bg" data-setbg="/assets/img/hero/hero-1.jpg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-7 col-md-8">
+                            <div class="hero__text">
+                                <!-- <h6>Summer Collection</h6> -->
+                                <h2>Discover Your Signature Scent</h2>
+                                <p>Explore our exclusive collection of luxurious fragrances. Find the perfect scent to express your unique style and personality.</p>
+                                <a href="/shop" class="primary-btn scrollto">Shop now <span class="arrow_right"></span></a>
+                                <div class="hero__social">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero__items set-bg" data-setbg="/assets/img/hero/hero-2.jpg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-5 col-lg-7 col-md-8">
+                            <div class="hero__text">
+                                <!-- <h6>Summer Collection</h6> -->
+                                <h2>Unveil Elegance in Every Drop</h2>
+                                <p>Dive into a world of exquisite scents. Elevate your presence with our curated collection of premium perfumes.</p>
+                                <a href="/shop" class="primary-btn scrollto">Shop now <span class="arrow_right"></span></a>
+                                <div class="hero__social">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                    <a href="#"><i class="fa fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Banner Section End -->
+
+    <!-- Category Section Begin-->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- <ul class="filter__controls">
+                    <li class="active" data-filter="*">Category</li>
+                </ul> -->
+                <div class="text-center">
+                    <h2 class="font-weight-bold" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Category</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6 mb-4">
+                <a href="/shop/men" class="card bg-dark text-white border-0 zoom-card position-relative overflow-hidden" style="border-radius: 15px; cursor: pointer;">
+                    <img src="/assets/img/category/men.jpg" alt="Card image" class="card-img zoom-img">
+                    <div class="card-img-overlay d-flex align-items-end">
+                        <h2 class="card-title mx-auto d-flex align-items-end font-weight-bold text-white">M E N</h2>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 mb-4">
+                <a href="shop/women" class="card bg-dark text-white border-0 zoom-card position-relative overflow-hidden" style="border-radius: 15px; cursor: pointer;">
+                    <img src="/assets/img/category/women.jpg" alt="Card image" class="card-img zoom-img">
+                    <div class="card-img-overlay d-flex align-items-end">
+                        <h2 class="card-title mx-auto d-flex align-items-end font-weight-bold text-white">W O M E N </h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .zoom-card .zoom-img {
+            transform: scale(1);
+            transition: transform .5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+    
+        .zoom-card .card-img-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: background-color .5s ease;
+        }
+    
+        .zoom-card:hover .zoom-img {
+            transform: scale(1.1) rotate(3deg);
+        }
+    
+        .zoom-card:hover .card-img-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+    
+    <!-- Category Section End -->
+
+    <!-- Product Section Begin -->
+    <section class="product spad mt-5" id="product_spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        <h2 class="font-weight-bold" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Get the Perfect Perfumes for You</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row product__filter d-flex justify-content-center mt-5 ">
+
+                <!-- Each Product -->
+                <% for (const product of products) { %>
+                    <div class="col-lg-3 col-md-6 col-sm-6 mix new-arrivals m-4" style="box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                        <div class="product__item">
+                            <div class="product__item__pic">
+                                <a href="/productPage?id=<%=product._id%>"><img src="/Product Images/<%=product.images[0]%>" alt="<%=product.name%>" class="set-bg"></a>
+                                <span class="label">New</span>
+                                <ul class="product__hover">
+                                    <li><a href="/login"><img src="/assets/img/icon/heart.png" alt=""></a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="product__item__text">
+                                <h6><%=product.name%></h6>
+                                <a href="/productPage?id=<%=product._id%>" class="add-cart">View</a>
+                                <div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                                <%if(product?.newPrice){%>
+                                    <span style="color: red; text-decoration: line-through;">Rs <%=product.price%></span>
+                                <h5>Rs <%=product.newPrice%> </h5>
+                                <%} else {%>
+                                <h5>Rs <%=product.price%></h5>
+                                <%}%>
+                                
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+
+    <!-- Instagram Section Begin -->
+    <section class="instagram spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="instagram__pic">
+                        <div class="instagram__pic__item set-bg" data-setbg="/assets/img/instagram/instagram-1.jpg"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="/assets/img/instagram/instagram-2.jpg"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="/assets/img/instagram/instagram-3.jpg"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="/assets/img/instagram/instagram-4.jpg"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="/assets/img/instagram/instagram-5.jpg"></div>
+                        <div class="instagram__pic__item set-bg" data-setbg="/assets/img/instagram/instagram-6.jpg"></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="instagram__text">
+                        <h2>Instagram</h2>
+                        <p>Discover the essence of elegance with Scentofia 🌸✨. From timeless classics to modern favorites, find the perfect scent to elevate every moment. Explore our curated collection and indulge in the luxury of fragrance.</p>
+                        <h3>#Perfume_Style</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Instagram Section End -->
+
+    <!-- <script>
+        function scrollToDiv(id){
+            const element = document.getElementById(id);
+            element.scrollIntoView({behavior:"smooth"});
+        }
+    </script> -->
+
+
+<%- include('footer.ejs') %>

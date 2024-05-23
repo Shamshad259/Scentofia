@@ -1,0 +1,142 @@
+<%- include('header.ejs') %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-3">
+            <div class="header__logo">
+                <a href="/"><img src="/assets/img/logo.png" alt=""></a>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <nav class="header__menu mobile-menu">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/shop">Shop</a></li>
+                    <li><a href="/shop/men">Men</a></li>
+                    <li><a href="/shop/women">Women</a></li>
+                    <li><a href="/contactUs">Contact us</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-3 col-md-3">
+            <div class="header__nav__option">
+                <a href="/wishlist"><img src="/assets/img/icon/heart.png" alt=""></a>
+                <a href="/cart"><img src="/assets/img/icon/cart.png" alt=""></a>
+            </div>
+        </div>
+    </div>
+    <div class="canvas__open"><i class="fa fa-bars"></i></div>
+</div>
+</header>
+<!-- Header Section End -->
+
+<style>
+    .error-message {
+        color: #dc3545;
+        font-size: 0.8rem;
+    }
+
+    .card {
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Registration</h2>
+                    <% if(locals.message) { %>
+                        <div class="alert alert-danger text-center" id="invalid">
+                            <%= message %>
+                        </div>
+                    <% } %>
+                    <form id="registrationForm" class="needs-validation" novalidate method="post">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" pattern="[A-Za-z][A-Za-z\s]*" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid name.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email">
+                            <div class="invalid-feedback">
+                                Please provide a valid email in the format user@example.com.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile"><i class="fas fa-phone"></i> Mobile</label>
+                            <input type="tel" class="form-control" id="mobile" name="mobile" placeholder="Enter your mobile number" pattern="[0-9]{10}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid 10-digit mobile number.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password"><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$" required>
+                            <div class="invalid-feedback">
+                                Password must be at least 8 characters long and contain at least one number, one uppercase, and one lowercase letter.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                            <div class="invalid-feedback">
+                                Confirm password should be same as above password.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Send OTP</button>
+                        <p class="text-center mt-3">Already have an account? <a href="/login">Login</a></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    (function() {
+    let form = document.getElementById('registrationForm');
+    form.addEventListener('submit', (event)=> {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+
+        let password = form.password.value;
+        let confirmPassword = form.confirmPassword.value;
+        if (password !== confirmPassword) {
+            form.confirmPassword.setCustomValidity('Passwords must match.');
+            event.preventDefault();
+        } else {
+            form.confirmPassword.setCustomValidity('');
+        }
+
+        let email = form.email.value;
+        let emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        if (!emailRegex.test(email)) {
+            form.email.setCustomValidity('Please provide a valid email in the format user@example.com.');
+            event.preventDefault();
+        } else {
+            form.email.setCustomValidity('');
+        }
+    }, false);
+})();
+
+</script>
+
+
+
+
+<%- include('footer.ejs') %>
