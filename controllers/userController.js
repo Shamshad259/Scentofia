@@ -23,7 +23,7 @@ const offerPrice = async (products) => {
 
     for (let product of products) {
       let productOfferMatch = 0;
-      let categoryOfferMatch = 0;
+      let categoryOfferMatch = 0;``
       let productOfferPercentage;
       let categoryOfferPercentage;
 
