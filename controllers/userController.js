@@ -14,6 +14,7 @@ const Address = require("../model/addressModel");
 const Cart = require("../model/cartModel");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+require("dotenv").config();
 
 const offerPrice = async (products) => {
   try {
