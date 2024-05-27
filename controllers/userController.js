@@ -282,7 +282,7 @@ passport.use(
     {
       clientID: process.env.ClientID,
       clientSecret: process.env.ClientSecret,
-      callbackURL: "http://localhost:4000/auth/google/callback",
+      callbackURL: "https://scentofia.shop/auth/google/callback",
       passReqToCallback: true,
     },
     (request, accessToken, refreshToken, profile, done) => {
