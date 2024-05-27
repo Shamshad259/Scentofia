@@ -277,19 +277,19 @@ const verifyLogin = async (req, res, next) => {
   }
 };
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.ClientID,
-      clientSecret: process.env.ClientSecret,
-      callbackURL: "https://scentofia.shop/auth/google/callback",
-      passReqToCallback: true,
-    },
-    (request, accessToken, refreshToken, profile, done) => {
-      done(null, profile);
-    }
-  )
-);
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: process.env.ClientID,
+//       clientSecret: process.env.ClientSecret,
+//       callbackURL: "https://scentofia.shop/auth/google/callback",
+//       passReqToCallback: true,
+//     },
+//     (request, accessToken, refreshToken, profile, done) => {
+//       done(null, profile);
+//     }
+//   )
+// );
 
 passport.serializeUser((user, done) => {
   done(null, user);
