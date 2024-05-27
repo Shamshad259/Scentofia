@@ -286,7 +286,7 @@
                     .then((response) => {
                         if (response.data.success) {
                             const currentCount = parseInt(document.getElementById("cartCount").textContent);
-                            document.getElementById("cartCount").textContent = currentCount + 1;
+                            document.getElementById("cartCount").textContent = Number(currentCount) + 1;
                             Swal.fire(
                                 "Success",
                                 "The product has been successfully added to the cart",
