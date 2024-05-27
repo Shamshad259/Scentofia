@@ -30,9 +30,11 @@ const loadAddCategory = async (req, res,next) => {
 
 const addCategory = async (req, res,next) => {
   try {
-    const already = await Category.findOne({name : req.body.categoryName});
+    const already = await Category.find({
+      name: { $regex: req.body.categoryName, $options: "i" },
+    });
     if(already){
-      return res.redirect("/admin/category");
+      return res.render("add-category",{message:"This category already exists"});
     }
     await new Category({ name: req.body.categoryName }).save();
     res.redirect("/admin/category");

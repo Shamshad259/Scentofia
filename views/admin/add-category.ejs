@@ -103,6 +103,9 @@
               <div class="form-group">
                 <label for="exampleInputName1">Category Name</label>
                 <input type="text" class="form-control" id="exampleInputName1" name="categoryName" placeholder="Enter the Category Name" />
+                <% if(locals.message){%>
+                <small class="text-danger"><%=message%></small>
+                <%}%>
               </div>
               <button type="submit" class="btn btn-gradient-dark mr-2">
                 Add
