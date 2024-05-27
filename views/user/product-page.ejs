@@ -290,9 +290,8 @@
                                 "The product has been successfully added to the cart",
                                 "success"
                             )
-                            .then(()=>{                 
-                            const currentCount = parseInt(document.getElementById("cartCount").textContent);
-                            document.getElementById("cartCount").textContent = currentCount + 1;
+                            .then(()=>{
+                                window.location.reload();
                             })
                         } else {
                             Swal.fire(
