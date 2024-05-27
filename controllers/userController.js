@@ -14,7 +14,6 @@ const Address = require("../model/addressModel");
 const Cart = require("../model/cartModel");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-require("dotenv").config();
 
 const offerPrice = async (products) => {
   try {
@@ -146,7 +145,7 @@ const loadLandingPage = async (req, res, next) => {
       .sort({ date: -1 })
       .limit(6);
     products = await offerPrice(products);
-    console.log(process.env.ClientID,process.env.ClientSecret)
+    console.log(process.env.ClientID,process.env.ClientSecret);
     res.render("landing-page", { products: products });
   } catch (error) {
     next(error);

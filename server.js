@@ -16,6 +16,7 @@
   const { v4: uuidv4 } = require("uuid");
   const session = require("express-session");
 
+  console.log("Hiii",process.env.ClientID,process.env.ClientSecret)
   app.use(
     session({
       secret: uuidv4(),
