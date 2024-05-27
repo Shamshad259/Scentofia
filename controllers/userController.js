@@ -281,7 +281,7 @@ const verifyLogin = async (req, res, next) => {
 passport.use(
   new GoogleStrategy(
     {
-      clientId: process.env.ClientId,
+      clientID: process.env.ClientId,
       clientSecret: process.env.ClientSecret,
       callbackURL: "https://scentofia.shop/auth/google/callback",
       passReqToCallback: true,
@@ -303,6 +303,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
+
 
 const googleSuccess = async (req, res, next) => {
   try {
