@@ -28,20 +28,24 @@ const loadAddCategory = async (req, res,next) => {
   }
 };
 
-const addCategory = async (req, res,next) => {
+const addCategory = async (req, res, next) => {
   try {
+    const categoryName = req.body.categoryName.trim(); 
     const already = await Category.find({
-      name: { $regex: req.body.categoryName, $options: "i" },
+      name: { $regex: `^${categoryName}$`, $options: "i" },
     });
-    if(already.length>0){
-      return res.render("add-category",{message:"This category already exists"});
+
+    if (already.length > 0) {
+      return res.render("add-category", { message: "This category already exists" });
     }
-    await new Category({ name: req.body.categoryName }).save();
+
+    await new Category({ name: categoryName }).save();
     res.redirect("/admin/category");
   } catch (error) {
     next(error);
   }
 };
+
 
 const loadEditCategory = async (req, res,next) => {
   try {
