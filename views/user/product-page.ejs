@@ -285,14 +285,15 @@
                 axios.get(`/addToCart?id=${productId}`)
                     .then((response) => {
                         if (response.data.success) {
-                            const currentCount = parseInt(document.getElementById("cartCount").textContent);
-                            document.getElementById("cartCount").textContent = Number(currentCount) + 1;
-                            console.log(currentCount);
                             Swal.fire(
                                 "Success",
                                 "The product has been successfully added to the cart",
                                 "success"
                             )
+                            .then(()=>{                 
+                            const currentCount = parseInt(document.getElementById("cartCount").textContent);
+                            document.getElementById("cartCount").textContent = currentCount + 1;
+                            })
                         } else {
                             Swal.fire(
                                 "Info",
