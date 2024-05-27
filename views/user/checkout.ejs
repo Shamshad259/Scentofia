@@ -391,113 +391,139 @@
       }
 
 
-      function proceed(event) {
-        event.preventDefault();
-        const selectedAddress = document.querySelector("input[name='selectedAddress']:checked");
-        if (!selectedAddress) {
-          Swal.fire(
-            "Select an address to proceed",
-            "",
-            "warning"
-          )
-          return false;
-        }
-
-        const selectedPaymentMethod = document.querySelector("input[name='paymentMethod']:checked");
-        if (!selectedPaymentMethod) {
-          Swal.fire(
-            "Select a payment method to proceed",
-            "",
-            "warning"
-          )
-          return false;
-        }
-
-
+      const stockCheck = () => {
+  return axios.get("/stockCheck")
+    .then((response) => {
+      if (response.data.success) {
+        return true;
+      } else {
         Swal.fire({
-          title: 'Are you sure?',
-          text: 'The order will get placed',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Yes',
-          cancelButtonText: 'Cancel',
-          reverseButtons: true
+          title: "Warning",
+          text: response.data.message,
+          icon: "warning",
+          confirmButtonText: "Ok"
         }).then((result) => {
           if (result.isConfirmed) {
-            const formData = {
-              selectedAddress: selectedAddress.value,
-              paymentMethod: selectedPaymentMethod.value,
-              totalPrice: document.querySelector("input[name='totalPrice']").value
-            };
-
-            axios.post(`/createOrder`, formData)
-              .then((response) => {
-                if (response.data.success && selectedPaymentMethod.value === 'razorpay') {
-                  let options = {
-                    "key": response.data.key_id,
-                    "amount": response.data.amount,
-                    "currency": "INR",
-                    "name": "Scentofia",
-                    "description": "Test Transaction",
-                    "order_id": response.data.order_id,
-                    "handler": function (response) {
-                      if (response.error) {
-                        // Payment failed
-                        window.location.href = "/orderFailed"
-                      } else if (response.razorpay_payment_id) {
-                        // Payment succeeded
-                        window.location.href = "/orderSuccess";
-                      }
-
-                    },
-
-                    "notes": {
-                      "address": "Razorpay Corporate Office"
-                    },
-                    "theme": {
-                      "color": "#F37254"
-                    }
-                  };
-                  let rzp1 = new Razorpay(options);
-                  rzp1.open();
-                  rzp1.on('payment.failed', (response) => {
-                    setTimeout(() => {
-                      rzp1.close();
-                      window.location.href = "/orderFailed";
-
-                    }, 3000);
-
-                  })
-
-                } else if (response.data.success && selectedPaymentMethod.value === 'wallet') {
-                  if (response.data.message === "Insufficient Balance") {
-                    document.getElementById("walletError").style.display = "block";
-                    document.getElementById("codError").style.display = "none";
-                    return false;
-                  } else {
-                    window.location.href = "/orderSuccess";
-                  }
-                } else {
-                  if (response.data.message === "Cannot place order in COD") {
-                    document.getElementById("codError").style.display = "block";
-                    document.getElementById("walletError").style.display = "none";
-                    return false;
-                  }
-                  window.location.href = "/orderSuccess";
-
-                }
-              })
-              .catch((error) => {
-                console.error('Error placing the order:', error);
-                Swal.fire(
-                  'Error!',
-                  'An error occurred while placing the order.',
-                  'error'
-                );
-              });
+            window.location.reload();
           }
         });
+        return false;
       }
+    })
+    .catch((error) => {
+      Swal.fire(
+        "Error",
+        "Oops..Something went wrong",
+        "error"
+      );
+      return false;
+    });
+};
+
+const proceed = (event) => {
+  event.preventDefault();
+  const selectedAddress = document.querySelector("input[name='selectedAddress']:checked");
+  if (!selectedAddress) {
+    Swal.fire(
+      "Select an address to proceed",
+      "",
+      "warning"
+    );
+    return false;
+  }
+
+  const selectedPaymentMethod = document.querySelector("input[name='paymentMethod']:checked");
+  if (!selectedPaymentMethod) {
+    Swal.fire(
+      "Select a payment method to proceed",
+      "",
+      "warning"
+    );
+    return false;
+  }
+
+  stockCheck().then((isStockAvailable) => {
+    if (!isStockAvailable) {
+      return;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'The order will get placed',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const formData = {
+          selectedAddress: selectedAddress.value,
+          paymentMethod: selectedPaymentMethod.value,
+          totalPrice: document.querySelector("input[name='totalPrice']").value
+        };
+
+        axios.post(`/createOrder`, formData)
+          .then((response) => {
+            if (response.data.success && selectedPaymentMethod.value === 'razorpay') {
+              let options = {
+                "key": response.data.key_id,
+                "amount": response.data.amount,
+                "currency": "INR",
+                "name": "Scentofia",
+                "description": "Test Transaction",
+                "order_id": response.data.order_id,
+                "handler": function (response) {
+                  if (response.error) {
+                    window.location.href = "/orderFailed";
+                  } else if (response.razorpay_payment_id) {
+                    window.location.href = "/orderSuccess";
+                  }
+                },
+                "notes": {
+                  "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                  "color": "#F37254"
+                }
+              };
+              let rzp1 = new Razorpay(options);
+              rzp1.open();
+              rzp1.on('payment.failed', (response) => {
+                setTimeout(() => {
+                  rzp1.close();
+                  window.location.href = "/orderFailed";
+                }, 3000);
+              });
+            } else if (response.data.success && selectedPaymentMethod.value === 'wallet') {
+              if (response.data.message === "Insufficient Balance") {
+                document.getElementById("walletError").style.display = "block";
+                document.getElementById("codError").style.display = "none";
+                return false;
+              } else {
+                window.location.href = "/orderSuccess";
+              }
+            } else {
+              if (response.data.message === "Cannot place order in COD") {
+                document.getElementById("codError").style.display = "block";
+                document.getElementById("walletError").style.display = "none";
+                return false;
+              }
+              window.location.href = "/orderSuccess";
+            }
+          })
+          .catch((error) => {
+            console.error('Error placing the order:', error);
+            Swal.fire(
+              'Error!',
+              'An error occurred while placing the order.',
+              'error'
+            );
+          });
+      }
+    });
+  });
+};
 
 
       function viewCoupon() {
