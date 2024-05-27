@@ -290,7 +290,6 @@ passport.use(
       if (!profile) {
         return done(new Error('No profile returned by Google'));
       }
-      console.log('Authenticated user profile:', profile);
       done(null, profile);
     }
   )
