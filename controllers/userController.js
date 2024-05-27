@@ -281,7 +281,7 @@ const verifyLogin = async (req, res, next) => {
 passport.use(
   new GoogleStrategy(
     {
-      clientId: process.env.ClientID,
+      clientId: process.env.ClientId,
       clientSecret: process.env.ClientSecret,
       callbackURL: "https://scentofia.shop/auth/google/callback",
       passReqToCallback: true,
