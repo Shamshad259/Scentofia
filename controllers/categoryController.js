@@ -33,7 +33,7 @@ const addCategory = async (req, res,next) => {
     const already = await Category.find({
       name: { $regex: req.body.categoryName, $options: "i" },
     });
-    if(already){
+    if(already.length>0){
       return res.render("add-category",{message:"This category already exists"});
     }
     await new Category({ name: req.body.categoryName }).save();
