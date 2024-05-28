@@ -126,7 +126,7 @@
                 <div id="imagePreview"></div>
                 <small id="imageError" class="text-danger"></small>
               </div>
-             
+
               <div class="form-group">
                 <label for="exampleInputName1">Quantity</label>
                 <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Enter the Quantity">
@@ -170,42 +170,42 @@
           </div>
         </div>
       </div>
-      
+
       <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet">
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
       <script src="https://unpkg.com/cropperjs"></script>
-      
+
       <script>
         let cropper;
         let currentFileIndex = -1;
         let files = [];
         let images = [];
-      
+
         function handleFileSelect(event) {
           const preview = document.getElementById('imagePreview');
           preview.innerHTML = '';
-      
+
           files = Array.from(event.target.files);
           images = files.slice();
           const filesAmount = files.length;
-      
+
           document.getElementById('fileCount').value = filesAmount + ' files selected';
-      
+
           for (let i = 0; i < filesAmount; i++) {
             const reader = new FileReader();
-      
+
             reader.onload = function(event) {
               const imageWrapper = document.createElement('div');
               imageWrapper.style.position = 'relative';
               imageWrapper.style.display = 'inline-block';
               imageWrapper.style.marginRight = '10px';
-      
+
               const imageElement = document.createElement('img');
               imageElement.src = event.target.result;
               imageElement.style.width = '100px';
               imageElement.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
-      
+
               const removeButton = document.createElement('button');
               removeButton.innerText = 'x';
               removeButton.style.position = 'absolute';
@@ -219,18 +219,22 @@
               removeButton.onclick = function() {
                 const newFiles = images.filter((_, index) => index !== i);
                 const fileList = new DataTransfer();
-      
+
                 newFiles.forEach(file => {
                   fileList.items.add(file);
                 });
-      
+
                 images = newFiles;
                 document.getElementById('imageInput').files = fileList.files;
-                handleFileSelect({ target: { files: fileList.files } });
-      
+                handleFileSelect({
+                  target: {
+                    files: fileList.files
+                  }
+                });
+
                 document.getElementById('imageInput').value = '';
               };
-      
+
               const cropButton = document.createElement('button');
               cropButton.type = 'button';
               cropButton.innerText = 'Crop';
@@ -248,17 +252,17 @@
                 $('#cropModal').modal('show');
                 initializeCropper();
               };
-      
+
               imageWrapper.appendChild(imageElement);
               imageWrapper.appendChild(removeButton);
               imageWrapper.appendChild(cropButton);
               preview.appendChild(imageWrapper);
             };
-      
+
             reader.readAsDataURL(files[i]);
           }
         }
-      
+
         function initializeCropper() {
           const image = document.getElementById('cropperImage');
           cropper = new Cropper(image, {
@@ -267,127 +271,126 @@
             autoCropArea: 1,
           });
         }
-      
+
         document.getElementById('cropButton').addEventListener('click', function(event) {
-          event.preventDefault(); // Prevent form submission
+          event.preventDefault(); 
           const canvas = cropper.getCroppedCanvas({
             width: 600,
             height: 600,
           });
-      
+
           canvas.toBlob(function(blob) {
-            const newFile = new File([blob], images[currentFileIndex].name, { type: 'image/png' });
+            const newFile = new File([blob], images[currentFileIndex].name, {
+              type: 'image/png'
+            });
             images[currentFileIndex] = newFile;
-      
+
             const fileList = new DataTransfer();
             images.forEach(file => {
               fileList.items.add(file);
             });
-      
+
             document.getElementById('imageInput').files = fileList.files;
-      
+
             const url = URL.createObjectURL(blob);
             const imageElement = document.createElement('img');
             imageElement.src = url;
             imageElement.style.width = '100px';
             imageElement.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
-      
+
             const preview = document.getElementById('imagePreview');
             const imageWrappers = preview.getElementsByTagName('div');
-      
+
             imageWrappers[currentFileIndex].replaceChild(imageElement, imageWrappers[currentFileIndex].getElementsByTagName('img')[0]);
-      
+
             $('#cropModal').modal('hide');
             cropper.destroy();
           });
         });
-      
+
         document.getElementById('imageInput').addEventListener('click', function() {
           this.value = '';
         });
-      
-      async function validateForm(event) {
-    event.preventDefault();  // Always prevent default first
-    
-    let productName = document.getElementById('productName').value.trim();
-    let quantity = document.getElementById('quantity').value.trim();
-    let price = document.getElementById('price').value.trim();
-    let productDescription = document.getElementById('productDescription').value.trim();
-    let images = document.querySelector(".file-upload-default");
-    let category = document.getElementById('category').selectedIndex;
 
-    let nameRegex = /^[a-zA-Z0-9\s]+$/;
-    let numberRegex = /^\d+$/;
-    let priceRegex = /^\d+(\.\d{1,2})?$/;
-    let isValid = true;
+        async function validateForm(event) {
+          event.preventDefault();
 
-    document.getElementById('productNameError').innerText = '';
-    document.getElementById('quantityError').innerText = '';
-    document.getElementById('priceError').innerText = '';
-    document.getElementById('productDescriptionError').innerText = '';
-    document.getElementById('imageError').innerText = '';
-    document.getElementById('categoryError').innerText = '';
+          let productName = document.getElementById('productName').value.trim();
+          let quantity = document.getElementById('quantity').value.trim();
+          let price = document.getElementById('price').value.trim();
+          let productDescription = document.getElementById('productDescription').value.trim();
+          let images = document.querySelector(".file-upload-default");
+          let category = document.getElementById('category').selectedIndex;
 
-    try {
-        const response = await axios.get(`/admin/products/checkAlready?productName=${productName}`);
-        if (!response.data.success) {
-            document.getElementById('productNameError').innerText = 'Product Name already exists';
+          let nameRegex = /^[a-zA-Z0-9\s]+$/;
+          let numberRegex = /^\d+$/;
+          let priceRegex = /^\d+(\.\d{1,2})?$/;
+          let isValid = true;
+
+          document.getElementById('productNameError').innerText = '';
+          document.getElementById('quantityError').innerText = '';
+          document.getElementById('priceError').innerText = '';
+          document.getElementById('productDescriptionError').innerText = '';
+          document.getElementById('imageError').innerText = '';
+          document.getElementById('categoryError').innerText = '';
+
+          try {
+            const response = await axios.get(`/admin/products/checkAlready?productName=${productName}`);
+            if (!response.data.success) {
+              document.getElementById('productNameError').innerText = 'Product Name already exists';
+              isValid = false;
+            }
+          } catch (error) {
+            console.error('Error checking product name:', error);
+            document.getElementById('productNameError').innerText = 'Error checking product name';
             isValid = false;
-        }
-    } catch (error) {
-        console.error('Error checking product name:', error);
-        document.getElementById('productNameError').innerText = 'Error checking product name';
-        isValid = false;
-    }
+          }
 
-    if (!nameRegex.test(productName)) {
-        document.getElementById('productNameError').innerText = 'Product Name must be of only letters and numbers';
-        isValid = false;
-    }
-
-    if (category === 0) {
-        document.getElementById('categoryError').innerText = 'Category is required';
-        isValid = false;
-    }
-
-    if (!quantity.match(numberRegex) || quantity <= 0) {
-        document.getElementById('quantityError').innerText = 'Quantity should be at least 1';
-        isValid = false;
-    }
-
-    if (!priceRegex.test(price) || price <= 0) {
-        document.getElementById('priceError').innerText = 'Price must be a number greater than 0';
-        isValid = false;
-    }
-
-    if (productDescription.length === 0) {
-        document.getElementById('productDescriptionError').innerText = 'Product Description is required';
-        isValid = false;
-    }
-
-    if (images.files.length < 3) {
-        document.getElementById('imageError').innerText = 'Select at least three images';
-        isValid = false;
-    }
-
-    for (let i = 0; i < images.files.length; i++) {
-        let fileName = images.files[i].name;
-        let extensions = /(\.jpg|\.jpeg|\.png)$/i;
-        if (!extensions.test(fileName)) {
-            document.getElementById('imageError').innerText = 'Select only valid Image files (jpg/jpeg/png)';
+          if (!nameRegex.test(productName)) {
+            document.getElementById('productNameError').innerText = 'Product Name must be of only letters and numbers';
             isValid = false;
+          }
+
+          if (category === 0) {
+            document.getElementById('categoryError').innerText = 'Category is required';
+            isValid = false;
+          }
+
+          if (!quantity.match(numberRegex) || quantity <= 0) {
+            document.getElementById('quantityError').innerText = 'Quantity should be at least 1';
+            isValid = false;
+          }
+
+          if (!priceRegex.test(price) || price <= 0) {
+            document.getElementById('priceError').innerText = 'Price must be a number greater than 0';
+            isValid = false;
+          }
+
+          if (productDescription.length === 0) {
+            document.getElementById('productDescriptionError').innerText = 'Product Description is required';
+            isValid = false;
+          }
+
+          if (images.files.length < 3) {
+            document.getElementById('imageError').innerText = 'Select at least three images';
+            isValid = false;
+          }
+
+          for (let i = 0; i < images.files.length; i++) {
+            let fileName = images.files[i].name;
+            let extensions = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!extensions.test(fileName)) {
+              document.getElementById('imageError').innerText = 'Select only valid Image files (jpg/jpeg/png)';
+              isValid = false;
+            }
+          }
+
+          if (isValid) {
+            event.target.submit();
+          } else {
+            return false;
+          }
         }
-    }
-
-    if (isValid) {
-        // If form is valid, submit it
-        event.target.submit();
-    } else {
-        return false;  // Prevent form submission if validation fails
-    }
-}
-
-
       </script>
 
       <%- include('footer.ejs') %>
