@@ -142,9 +142,9 @@ const sendOTPEmail = (recipientEmail, otp) => {
 const loadLandingPage = async (req, res, next) => {
   try {
     let products = await Product.find({ isDeleted: 0 }).populate('categoryId')
-      .sort({ date: -1 })
-      .limit(6);
-      products = products.filter((product)=>product.categoryId.isDeleted===0);
+      .sort({ date: -1 });
+      products = products.filter((product)=>product.categoryId.isDeleted==0);
+      products = products.slice(0,6);
     products = await offerPrice(products);
     res.render("landing-page", { products: products });
   } catch (error) {
