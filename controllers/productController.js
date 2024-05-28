@@ -61,6 +61,25 @@ const loadAddProduct = async (req, res,next) => {
     next(error);
   }
 };
+
+const checkAlready = async (req, res, next) => {
+  try {
+    const productName = req.query.productName.trim(); 
+    const already = await Product.find({
+      name: { $regex: `^${productName}$`, $options: "i" },
+    });
+    if (already.length > 0) {
+      return res.json({ success: false });
+    } else {
+      return res.json({ success: true });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 const addProduct = async (req, res, next) => {
   try {
       const { productName, categoryName, price, quantity, productDescription } = req.body;
@@ -228,6 +247,7 @@ const editProduct = async (req, res, next) => {
 module.exports = {
   loadProducts,
   loadAddProduct,
+  checkAlready,
   addProduct,
   deleteProduct,
   loadDeletedProducts,

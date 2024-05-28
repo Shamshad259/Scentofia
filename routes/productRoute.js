@@ -25,6 +25,7 @@ product_route.post('/upload-cropped-image', upload.single('croppedImage'), (req,
 
 product_route.get("/", productController.loadProducts);
 product_route.get("/addProduct", productController.loadAddProduct);
+product_route.get("/checkAlready",productController.checkAlready)
 product_route.post("/addProduct", upload.array("images"), productController.addProduct);
 
 product_route.get("/deletedProducts", productController.loadDeletedProducts);
