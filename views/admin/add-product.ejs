@@ -98,7 +98,7 @@
           <div class="card-body">
             <h4 class="card-title">Add Product</h4>
             <br><br>
-            <form class="forms-sample" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <form class="forms-sample" method="post" enctype="multipart/form-data" onsubmit="return validateForm(event)">
               <div class="form-group">
                 <label for="exampleInputName1">Product Name</label>
                 <input type="text" class="form-control" id="productName" name="productName" placeholder="Enter the Product Name">
@@ -306,8 +306,9 @@
           this.value = '';
         });
       
-       async function validateForm() {
-        event.preventDefault();
+      async function validateForm(event) {
+    event.preventDefault();  // Always prevent default first
+    
     let productName = document.getElementById('productName').value.trim();
     let quantity = document.getElementById('quantity').value.trim();
     let price = document.getElementById('price').value.trim();
@@ -378,8 +379,14 @@
         }
     }
 
-    return isValid;
+    if (isValid) {
+        // If form is valid, submit it
+        event.target.submit();
+    } else {
+        return false;  // Prevent form submission if validation fails
+    }
 }
+
 
       </script>
 
