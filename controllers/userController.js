@@ -141,11 +141,11 @@ const sendOTPEmail = (recipientEmail, otp) => {
 
 const loadLandingPage = async (req, res, next) => {
   try {
-    let products = await Product.find({ isDeleted: 0 })
+    let products = await Product.find({ isDeleted: 0 }).populate('categoryId')
       .sort({ date: -1 })
       .limit(6);
+      products = products.filter((product)=>product.categoryId.isDeleted===0);
     products = await offerPrice(products);
-    console.log(process.env.ClientId,process.env.ClientSecret);
     res.render("landing-page", { products: products });
   } catch (error) {
     next(error);
