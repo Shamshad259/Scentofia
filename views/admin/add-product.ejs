@@ -307,6 +307,7 @@
         });
       
        async function validateForm() {
+        event.preventDefault();
     let productName = document.getElementById('productName').value.trim();
     let quantity = document.getElementById('quantity').value.trim();
     let price = document.getElementById('price').value.trim();
