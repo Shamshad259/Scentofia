@@ -261,6 +261,9 @@ const verifyLogin = async (req, res, next) => {
       if (userData.IsBlocked == true) {
         return res.render("login", { message: "You are Blocked by the Admin" });
       } else {
+        if(!userData.Password){
+          return res.render("login", { message: "Wrong Email or Password" });
+        }
         const passwordMatch = await bcrypt.compare(password, userData.Password);
 
         if (passwordMatch) {
